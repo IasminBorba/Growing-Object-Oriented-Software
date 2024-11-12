@@ -1,3 +1,5 @@
+package com.auctionbidder;
+
 import org.junit.jupiter.api.*;
 
 public class AuctionSniperEndToEndTest {

@@ -1,4 +1,4 @@
-package org.example;
+package com.auctionbidder;
 
 import java.util.Arrays;
 
