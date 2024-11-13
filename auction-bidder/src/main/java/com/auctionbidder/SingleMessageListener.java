@@ -9,8 +9,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.Is.is;
 
-public abstract class SingleMessageListener implements MessageListener {
+public class SingleMessageListener implements MessageListener {
     private final ArrayBlockingQueue<Message> messages =
             new ArrayBlockingQueue<Message>(1);
     public void processMessage(Chat chat, Message message) {
@@ -18,5 +19,10 @@ public abstract class SingleMessageListener implements MessageListener {
     }
     public void receivesAMessage() throws InterruptedException {
         assertThat("Message", messages.poll(5, SECONDS), is(notNullValue()));
+    }
+
+    @Override
+    public void processMessage(Message message) {
+
     }
 }
