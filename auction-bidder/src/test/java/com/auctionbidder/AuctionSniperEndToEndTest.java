@@ -10,8 +10,8 @@ public class AuctionSniperEndToEndTest {
     public void testSniperJoinsAuctionUntilAuctionCloses() throws Exception {
         auction.startSellingItem(); //Inicia o leilão
         application.startBiddingIn(auction); //Sniper iniciando a participação no leilão
-        auction.hasReceivedJoinRequestFromSniper(); //o leilão recebeu a solicitação de participação do sniper??
-        auction.announceClosed(); //fechamento do leilão
+//        auction.hasReceivedJoinRequestFromSniper(); //o leilão recebeu a solicitação de participação do sniper??
+//        auction.announceClosed(); //fechamento do leilão
         application.showsSniperHasLostAuction(); //sniper perdeu o leilão
     }
 

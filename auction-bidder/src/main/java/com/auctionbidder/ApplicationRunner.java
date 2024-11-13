@@ -1,13 +1,12 @@
 package com.auctionbidder;
 
+import static com.auctionbidder.MainWindow.*;
+
 public class ApplicationRunner {
     private static final String XMPP_HOSTNAME = "localhost";
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
     private AuctionSniperDriver driver;
-
-    protected static final String STATUS_JOINING = "Joining";
-    protected static final String STATUS_LOST = "Lost";
 
     public void startBiddingIn(final FakeAuctionServer auction) {
         Thread thread = new Thread("Test Application") {
