@@ -53,17 +53,17 @@
         <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-core</artifactId>
-            <version>4.4.6</version>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-tcp</artifactId>
-            <version>4.4.6</version>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-im</artifactId>
-            <version>4.4.6</version>
+            <version>3.1.0</version>
         </dependency>
     </dependencies>
 </project>

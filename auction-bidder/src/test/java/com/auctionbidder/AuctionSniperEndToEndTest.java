@@ -3,7 +3,7 @@ package com.auctionbidder;
 import org.junit.jupiter.api.*;
 
 public class AuctionSniperEndToEndTest {
-    private final FakeAuctionServer auction = new FakeAuctionServer("item-54321");  //leilão
+    private final FakeAuctionServer auction = new FakeAuctionServer("item-54321");
     private final ApplicationRunner application = new ApplicationRunner(); //sniper
 
     @Test

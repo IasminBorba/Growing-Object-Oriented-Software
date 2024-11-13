@@ -4,8 +4,9 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.chat.*;
 import org.jivesoftware.smack.packet.Message;
 
-import java.util.concurrent.BlockingDeque;
+import java.io.IOException;
 
+import static com.auctionbidder.XMPPConnectionUtil.connectTo;
 import static java.lang.String.format;
 
 public class FakeAuctionServer {
@@ -15,18 +16,17 @@ public class FakeAuctionServer {
     public static final String XMPP_HOSTNAME = "localhost";
     private static final String AUCTION_PASSWORD = "auction";
     private final String itemId;
-//    private final XMPPConnection connection;
+//    private final AbstractXMPPConnection connection;
     private Chat currentChat;
 
     public FakeAuctionServer(String itemId) {
         this.itemId = itemId;
-//        this.connection = new XMPPConnection(XMPP_HOSTNAME);
+//        this.connection = connectTo(XMPP_HOSTNAME, format(ITEM_ID_AS_LOGIN, itemId), AUCTION_PASSWORD);
     }
 
-    public void startSellingItem() throws XMPPException {
+    public void startSellingItem() throws XMPPException, SmackException, IOException, InterruptedException {
 //        connection.connect();
-//        connection.login(format(ITEM_ID_AS_LOGIN, itemId),
-//                AUCTION_PASSWORD, AUCTION_RESOURCE);
+//        connection.login();
 //        connection.getChatManager().addChatListener(
 //                new ChatManagerListener() {
 //                    public void chatCreated(Chat chat, boolean createdLocally) {
@@ -44,7 +44,7 @@ public class FakeAuctionServer {
         messageListener.receivesAMessage();
     }
 
-    public void announceClosed() throws XMPPException, SmackException.NotConnectedException, InterruptedException {
+    public void announceClosed() throws SmackException.NotConnectedException, InterruptedException {
         currentChat.sendMessage(new Message());
     }
 

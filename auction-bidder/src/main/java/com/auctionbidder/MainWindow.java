@@ -18,6 +18,7 @@ public class MainWindow extends JFrame {
         add(sniperStatus);
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(200,100);
         setVisible(true);
     }
 
