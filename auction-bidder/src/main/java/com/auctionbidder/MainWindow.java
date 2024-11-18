@@ -1,16 +1,16 @@
 package com.auctionbidder;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
-
-import java.awt.*;
-
-import static com.auctionbidder.Main.MAIN_WINDOW_NAME;
+import java.awt.Color;
 
 public class MainWindow extends JFrame {
-    protected static final String STATUS_JOINING = "Joining";
-    protected static final String STATUS_LOST = "Lost";
+    public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
+    public static final String STATUS_JOINING = "Joining";
+    public static final String STATUS_LOST = "Lost";
     public static final String SNIPER_STATUS_NAME = "sniper status";
+
     private final JLabel sniperStatus = createLabel(STATUS_JOINING);
 
     public MainWindow() {
@@ -19,7 +19,6 @@ public class MainWindow extends JFrame {
         add(sniperStatus);
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(200,100);
         setVisible(true);
     }
 
@@ -30,8 +29,7 @@ public class MainWindow extends JFrame {
         return result;
     }
 
-    protected void showStatus(String status) {
+    public void showStatus(String status) {
         sniperStatus.setText(status);
     }
 }
-
