@@ -1,19 +1,17 @@
 package com.auctionbidder;
 
+import com.auctionbidder.fakeconnection.FakeChatInstance;
+import com.auctionbidder.fakeconnection.FakeXMPPConnection;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.SwingUtilities;
 
 public class Main {
-    @SuppressWarnings("unused") private Chat notToBeGCd;
-    private MainWindow ui = new MainWindow();
-
-//    public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
-//    public static final String SNIPER_STATUS_NAME = "sniper status";
+    @SuppressWarnings("unused") private FakeChatInstance notToBeGCd;
+    private MainWindow ui;
 
     private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
@@ -34,8 +32,8 @@ public class Main {
         main.joinAuction(connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]), args[ARG_ITEM_ID]);
     }
 
-    private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
-        final Chat chat = connection.getChatManager().createChat(
+    private void joinAuction(FakeXMPPConnection connection, String itemId) throws XMPPException {
+        final FakeChatInstance chat = connection.getChatManager().createChat(
                 auctionId(itemId, connection),
                 new MessageListener() {
                     @Override
@@ -52,14 +50,14 @@ public class Main {
         chat.sendMessage("");
     }
 
-    private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
-        XMPPConnection connection = new XMPPConnection(hostname);
+    private static FakeXMPPConnection connection(String hostname, String username, String password) throws XMPPException {
+        FakeXMPPConnection connection = new FakeXMPPConnection(hostname);
         connection.connect();
         connection.login(username, password, AUCTION_RESOURCE);
         return connection;
     }
 
-    private static String auctionId(String itemId, XMPPConnection connection) {
+    private static String auctionId(String itemId, FakeXMPPConnection connection) {
         return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
     }
 
