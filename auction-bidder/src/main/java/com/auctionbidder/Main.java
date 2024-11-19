@@ -6,6 +6,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.SwingUtilities;
+import java.awt.event.*;
 
 public class Main {
     @SuppressWarnings("unused") private Chat notToBeGCd;
@@ -44,14 +45,23 @@ public class Main {
                     }
                 });
         this.notToBeGCd = chat;
-        chat.sendMessage("");
+        chat.sendMessage(JOIN_COMMAND_FORMAT);
     }
 
     private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
         XMPPConnection connection = new XMPPConnection(hostname);
         connection.connect();
         connection.login(username, password, AUCTION_RESOURCE);
-        return null;
+        return connection;
+    }
+
+    private void disconnectWhenUICloses(final XMPPConnection connection) {
+        ui.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                connection.disconnect();
+            }
+        });
     }
 
     private static String auctionId(String itemId, XMPPConnection connection) {
