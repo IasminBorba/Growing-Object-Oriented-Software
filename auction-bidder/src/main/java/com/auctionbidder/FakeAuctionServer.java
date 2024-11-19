@@ -1,10 +1,6 @@
 package com.auctionbidder;
 
-import com.auctionbidder.fakeconnection.FakeXMPPConnection;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -22,14 +18,12 @@ public class FakeAuctionServer {
 
     private final SingleMessageListener messageListener = new SingleMessageListener();
     private final String itemId;
-//    private final XMPPConnection connection;
-    private final FakeXMPPConnection connection;
+    private final XMPPConnection connection;
     private Chat currentChat;
 
     public FakeAuctionServer(String itemId) {
         this.itemId = itemId;
-//        this.connection = new XMPPConnection(XMPP_HOSTNAME);
-        this.connection = new FakeXMPPConnection(XMPP_HOSTNAME);
+        this.connection = new XMPPConnection(XMPP_HOSTNAME);
     }
 
     public void startSellingItem() throws XMPPException {
