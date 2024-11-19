@@ -2,8 +2,6 @@ package com.auctionbidder;
 
 import org.junit.jupiter.api.*;
 
-import java.awt.desktop.AppForegroundListener;
-
 public class AuctionSniperEndToEndTest {
     private final FakeAuctionServer auction = new FakeAuctionServer("item-54321");
     private final ApplicationRunner application = new ApplicationRunner(); //sniper
@@ -13,7 +11,7 @@ public class AuctionSniperEndToEndTest {
         auction.startSellingItem(); //Inicia o leilão
 
         application.startBiddingIn(auction); //Sniper iniciando a participação no leilão
-        auction.hasReceivedJoinRequestFromSniper(); //aguardando o leilão receber a solicitação de participação do sniper
+        auction.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID); //aguardando o leilão receber a solicitação de participação do sniper
 
         auction.announceClosed(); //fechamento do leilão
         application.showsSniperHasLostAuction(); //sniper perdeu o leilão
