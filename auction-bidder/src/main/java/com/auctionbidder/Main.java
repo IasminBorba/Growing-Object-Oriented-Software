@@ -3,7 +3,6 @@ package com.auctionbidder;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.SwingUtilities;
 import java.awt.event.*;
@@ -49,6 +48,8 @@ public class Main implements AuctionEventListener {
             }
         });
     }
+
+    public void currentPrice(int prince, int increment) {}
 
     private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
         XMPPConnection connection = new XMPPConnection(hostname);
