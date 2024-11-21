@@ -7,7 +7,7 @@ import org.jivesoftware.smack.XMPPException;
 import javax.swing.SwingUtilities;
 import java.awt.event.*;
 
-public class Main implements AuctionEventListener {
+public class Main implements SniperListener {
     @SuppressWarnings("unused") private Chat notToBeGCd;
     private MainWindow ui;
     private static final int ARG_HOSTNAME = 0;
@@ -36,12 +36,12 @@ public class Main implements AuctionEventListener {
 
         Chat chat = connection.getChatManager().createChat(
                 auctionId(itemId, connection),
-                new AuctionMessageTranslator(this));
+                new AuctionMessageTranslator(new AuctionSniper(this)));
         this.notToBeGCd = chat;
         chat.sendMessage(JOIN_COMMAND_FORMAT);
     }
 
-    public void auctionClosed() {
+    public void sniperLost() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 ui.showStatus(MainWindow.STATUS_LOST);
