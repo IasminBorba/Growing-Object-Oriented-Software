@@ -7,7 +7,7 @@ import org.jivesoftware.smack.XMPPException;
 import javax.swing.SwingUtilities;
 import java.awt.event.*;
 
-public class Main implements SniperListener {
+public class Main {
     @SuppressWarnings("unused") private Chat notToBeGCd;
     private MainWindow ui;
     private static final int ARG_HOSTNAME = 0;
@@ -43,14 +43,14 @@ public class Main implements SniperListener {
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
         disconnectWhenUICloses(connection);
 
-        Chat chat =
-                connection.getChatManager().createChat(auctionId(itemId, connection), null);
-
+        Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection), null);
         this.notToBeGCd = chat;
 
         Auction auction = new XMPPAuction(chat);
         chat.addMessageListener(
-                new AuctionMessageTranslator(new AuctionSniper(auction, this)));
+                new AuctionMessageTranslator(
+                        connection.getUser(),
+                        new AuctionSniper(auction, new SniperStateDisplayer())));
         auction.join();
     }
 
@@ -74,23 +74,6 @@ public class Main implements SniperListener {
         return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
     }
 
-    public void sniperLost() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ui.showStatus(MainWindow.STATUS_LOST);
-            }
-        });
-    }
-
-    @Override
-    public void sniperBidding() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ui.showStatus(MainWindow.STATUS_BIDDING);
-            }
-        });
-    }
-
     public static class XMPPAuction implements Auction {
         private final Chat chat;
 
@@ -112,6 +95,25 @@ public class Main implements SniperListener {
             } catch (XMPPException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public class SniperStateDisplayer implements SniperListener {
+        public void sniperBidding() {
+            showStatus(MainWindow.STATUS_BIDDING);
+        }
+        
+        public void sniperLost() {
+            showStatus(MainWindow.STATUS_LOST);
+        }
+        
+        private void showStatus(final String status) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    ui.showStatus(status);
+                }
+            });
         }
     }
 }
