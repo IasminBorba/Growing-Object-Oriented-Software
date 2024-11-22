@@ -32,11 +32,15 @@ public class Main implements SniperListener {
     }
 
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
+        Auction nullAuction = new Auction() {
+            @Override
+            public void bid(int amount) {}
+        };
         disconnectWhenUICloses(connection);
 
         Chat chat = connection.getChatManager().createChat(
                 auctionId(itemId, connection),
-                new AuctionMessageTranslator(new AuctionSniper(this)));
+                new AuctionMessageTranslator(new AuctionSniper(nullAuction, this)));
         this.notToBeGCd = chat;
         chat.sendMessage(JOIN_COMMAND_FORMAT);
     }
@@ -49,7 +53,14 @@ public class Main implements SniperListener {
         });
     }
 
-    public void currentPrice(int prince, int increment) {}
+    @Override
+    public void sniperBidding() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                ui.showStatus(MainWindow.STATUS_BIDDING);
+            }
+        });
+    }
 
     private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
         XMPPConnection connection = new XMPPConnection(hostname);
