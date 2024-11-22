@@ -31,41 +31,27 @@ public class Main implements SniperListener {
         main.joinAuction(connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]), args[ARG_ITEM_ID]);
     }
 
+    private void startUserInterface() throws Exception {
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                ui = new MainWindow();
+            }
+        });
+    }
+
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
         disconnectWhenUICloses(connection);
 
-        Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection), null);
+        Chat chat =
+                connection.getChatManager().createChat(auctionId(itemId, connection), null);
+
         this.notToBeGCd = chat;
 
-        Auction auction = new Auction() {
-            public void bid(int amount) {
-                try {
-                    chat.sendMessage(String.format(BID_COMMAND_FORMAT, amount));
-                } catch (XMPPException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+        Auction auction = new XMPPAuction(chat);
         chat.addMessageListener(
                 new AuctionMessageTranslator(new AuctionSniper(auction, this)));
-        chat.sendMessage(JOIN_COMMAND_FORMAT);
-    }
-
-    public void sniperLost() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ui.showStatus(MainWindow.STATUS_LOST);
-            }
-        });
-    }
-
-    @Override
-    public void sniperBidding() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ui.showStatus(MainWindow.STATUS_BIDDING);
-            }
-        });
+        auction.join();
     }
 
     private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
@@ -88,12 +74,44 @@ public class Main implements SniperListener {
         return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
     }
 
-    private void startUserInterface() throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
+    public void sniperLost() {
+        SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                ui = new MainWindow();
+                ui.showStatus(MainWindow.STATUS_LOST);
             }
         });
+    }
+
+    @Override
+    public void sniperBidding() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                ui.showStatus(MainWindow.STATUS_BIDDING);
+            }
+        });
+    }
+
+    public static class XMPPAuction implements Auction {
+        private final Chat chat;
+
+        public XMPPAuction(Chat chat) {
+            this.chat = chat;
+        }
+
+        public void bid(int amount) {
+            sendMessage(String.format(BID_COMMAND_FORMAT, amount));
+        }
+
+        public void join() {
+            sendMessage(JOIN_COMMAND_FORMAT);
+        }
+
+        private void sendMessage(final String message) {
+            try {
+                chat.sendMessage(message);
+            } catch (XMPPException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
