@@ -5,6 +5,7 @@ import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import com.auctionbidder.AuctionEventListener.PriceSource;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
@@ -31,6 +32,6 @@ public class AuctionSniperTest {
             atLeast(1).of(sniperListener).sniperBidding(); //se, pelo menos uma vez, o sniper notifica o listener que está dando lance
         }});
 
-        sniper.currentPrice(price, increment);
+        sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
     }
 }

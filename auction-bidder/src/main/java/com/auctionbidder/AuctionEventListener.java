@@ -1,7 +1,12 @@
 package com.auctionbidder;
 
-public interface AuctionEventListener {
-    void auctionClosed();
+import java.util.EventListener;
 
-    void currentPrice(int prince, int increment);
+public interface AuctionEventListener extends EventListener {
+    enum PriceSource {
+        FromSniper, FromOtherBidder;
+    }
+
+    void auctionClosed();
+    void currentPrice(int prince, int increment, PriceSource priceSource);
 }
