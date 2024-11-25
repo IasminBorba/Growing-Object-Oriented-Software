@@ -28,17 +28,17 @@ public class FakeAuctionServer {
     }
 
     public void startSellingItem() throws XMPPException {
-//        connection.connect();
-//        connection.login(format(ITEM_ID_AS_LOGIN, itemId),
-//                AUCTION_PASSWORD, AUCTION_RESOURCE);
-//        connection.getChatManager().addChatListener(
-//                new ChatManagerListener() {
-//                    @Override
-//                    public void chatCreated(Chat chat, boolean createdLocally) {
-//                        currentChat = chat;
-//                        chat.addMessageListener(messageListener);
-//                    }
-//                });
+        connection.connect();
+        connection.login(format(ITEM_ID_AS_LOGIN, itemId),
+                AUCTION_PASSWORD, AUCTION_RESOURCE);
+        connection.getChatManager().addChatListener(
+                new ChatManagerListener() {
+                    @Override
+                    public void chatCreated(Chat chat, boolean createdLocally) {
+                        currentChat = chat;
+                        chat.addMessageListener(messageListener);
+                    }
+                });
     }
 
     public String getItemId() {
@@ -48,7 +48,7 @@ public class FakeAuctionServer {
     public void reportPrice(int price, int increment, String bidder) throws XMPPException {
         currentChat.sendMessage(format("SQLVersion: 1.1; Event: PRICE; "
                         + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
-                price, increment, bidder));
+                        price, increment, bidder));
     }
 
     public void hasReceivedJoinRequestFrom(String sniperId) throws InterruptedException {

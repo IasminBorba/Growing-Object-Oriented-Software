@@ -18,7 +18,6 @@ public class AuctionSniper implements AuctionEventListener{
         }
     }
 
-    //Preço atual do item (preço, incremento, de quem veio (Do sniper ou de outro licitante)
     public void currentPrice(int price, int increment, PriceSource priceSource) {
         isWinning = priceSource == PriceSource.FromSniper;
         if(isWinning)
