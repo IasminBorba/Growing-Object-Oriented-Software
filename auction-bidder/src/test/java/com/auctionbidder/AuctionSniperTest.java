@@ -2,6 +2,7 @@ package com.auctionbidder;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.States;
 import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,13 +14,13 @@ public class AuctionSniperTest {
     private final Auction auction = context.mock(Auction.class);
     private final SniperListener sniperListener = context.mock(SniperListener.class);
     private final AuctionSniper sniper = new AuctionSniper(auction, sniperListener);
+    private final States sniperState = context.states("sniper");
 
     @Test
-    public void reportsLostWhenAuctionCloses() {
+    public void reportsLostIfAuctionClosesImmediately() {
         context.checking(new Expectations() {{
-            one(sniperListener).sniperLost();
+            atLeast(1).of(sniperListener).sniperLost();
         }});
-
         sniper.auctionClosed();
     }
 
@@ -42,4 +43,30 @@ public class AuctionSniperTest {
         }});
         sniper.currentPrice(123, 45, PriceSource.FromSniper);
     }
+
+    @Test
+    public void reportsLostIfAuctionClosesWhenBidding() {
+        context.checking(new Expectations() {{
+            ignoring(auction); //ignora o leilão
+            allowing(sniperListener).sniperBidding(); //allowing = apenas suporte ao teste, não é o foco principal (o teste não falha se a chamada não for feita)
+                                    then(sniperState.is("bidding")); //registramos o status bidding como o status atual do sniper
+            atLeast(1).of(sniperListener).sniperLost();
+                                    when(sniperState.is("bidding")); //expectativa principal: sniper está dando lance
+        }});
+        sniper.currentPrice(123,45,PriceSource.FromOtherBidder);
+        sniper.auctionClosed();
+    }
+
+    @Test public void reportsWonIfAuctionClosesWhenWinning() {
+        context.checking(new Expectations() {{
+            ignoring(auction);
+            allowing(sniperListener).sniperWinning();
+                                    then(sniperState.is("winning"));
+            atLeast(1).of(sniperListener).sniperWon();
+                                                when(sniperState.is("winning"));
+        }});
+        sniper.currentPrice(123, 45, PriceSource.FromSniper);
+        sniper.auctionClosed();
+    }
+
 }
