@@ -29,9 +29,17 @@ public class AuctionSniperTest {
         final int increment = 25;
         context.checking(new Expectations() {{
             one(auction).bid(price + increment); // lance seja enviado uma unica vez com o valor correto
-            atLeast(1).of(sniperListener).sniperBidding(); //se, pelo menos uma vez, o sniper notifica o listener que está dando lance
+            atLeast(1).of(sniperListener).sniperBidding(); //se, pelo menos uma vez, o sniper notifica que o listener que está dando lance
         }});
 
         sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
+    }
+
+    @Test
+    public void reportsIsWinningWhenCurrentPriceComesFromSniper() {
+        context.checking(new Expectations() {{
+            atLeast(1).of(sniperListener).sniperWinning();
+        }});
+        sniper.currentPrice(123, 45, PriceSource.FromSniper);
     }
 }

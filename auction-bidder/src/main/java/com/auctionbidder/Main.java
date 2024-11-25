@@ -102,6 +102,10 @@ public class Main {
         public void sniperBidding() {
             showStatus(MainWindow.STATUS_BIDDING);
         }
+
+        public void sniperWinning() {
+            showStatus(MainWindow.STATUS_WON);
+        }
         
         public void sniperLost() {
             showStatus(MainWindow.STATUS_LOST);
