@@ -51,13 +51,13 @@ public class Main {
                 new AuctionMessageTranslator( //traduz as mensagens do leilão em eventos
                         connection.getUser(),
                         new AuctionSniper(auction, new SniperStateDisplayer()))); //Conecta o listener a um AuctionSniper, que monitora o estado do leilão.
-        auction.join(); //Envia comando de entrada
+//        auction.join(); //Envia comando de entrada
     }
 
     private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
         XMPPConnection connection = new XMPPConnection(hostname);
-        connection.connect();
-        connection.login(username, password, AUCTION_RESOURCE);
+//        connection.connect();
+//        connection.login(username, password, AUCTION_RESOURCE);
         return connection;
     }
 
