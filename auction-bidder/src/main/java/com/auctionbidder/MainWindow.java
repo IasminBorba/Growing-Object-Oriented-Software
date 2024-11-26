@@ -37,7 +37,7 @@ public class MainWindow extends JFrame {
         return snipersTable;
     }
 
-    public void showStatus(String statusText) {
+    public void showStatusText(String statusText) {
         snipers.setStatusText(statusText);
     }
 }

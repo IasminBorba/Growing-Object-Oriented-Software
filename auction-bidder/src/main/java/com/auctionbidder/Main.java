@@ -50,7 +50,7 @@ public class Main {
         chat.addMessageListener(  //Adiciona um MessageListener para processar mensagens recebidas do leilão
                 new AuctionMessageTranslator( //traduz as mensagens do leilão em eventos
                         connection.getUser(),
-                        new AuctionSniper(auction, new SniperStateDisplayer()))); //Conecta o listener a um AuctionSniper, que monitora o estado do leilão.
+                        new AuctionSniper(itemId, auction, new SniperStateDisplayer()))); //Conecta o listener a um AuctionSniper, que monitora o estado do leilão.
 //        auction.join(); //Envia comando de entrada
     }
 
@@ -99,7 +99,7 @@ public class Main {
     }
 
     public class SniperStateDisplayer implements SniperListener {
-        public void sniperBidding() {
+        public void sniperBidding(SniperState state) {
             showStatus(MainWindow.STATUS_BIDDING);
         }
 
@@ -119,7 +119,7 @@ public class Main {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    ui.showStatus(status);
+                    ui.showStatusText(status);
                 }
             });
         }

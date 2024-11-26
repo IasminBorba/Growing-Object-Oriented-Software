@@ -10,10 +10,11 @@ import com.auctionbidder.AuctionEventListener.PriceSource;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
+    protected static final String ITEM_ID = "item-id";
     private final Mockery context = new Mockery();
     private final Auction auction = context.mock(Auction.class);
     private final SniperListener sniperListener = context.mock(SniperListener.class);
-    private final AuctionSniper sniper = new AuctionSniper(auction, sniperListener);
+    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
     private final States sniperState = context.states("sniper");
 
     @Test
@@ -28,9 +29,11 @@ public class AuctionSniperTest {
     public void bidsHigherAndReportsBiddingWhenNewPriceArrives() {
         final int price = 1001;
         final int increment = 25;
+        final int bid = price + increment;
         context.checking(new Expectations() {{
-            one(auction).bid(price + increment); // lance seja enviado uma unica vez com o valor correto
-            atLeast(1).of(sniperListener).sniperBidding(); //se, pelo menos uma vez, o sniper notifica que o listener que está dando lance
+            one(auction).bid(bid); // lance seja enviado uma unica vez com o valor correto
+            atLeast(1).of(sniperListener).sniperBidding(
+                                                new SniperState(ITEM_ID, price, bid)); //se, pelo menos uma vez, o sniper notifica que o listener que está dando lance
         }});
 
         sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
@@ -48,7 +51,7 @@ public class AuctionSniperTest {
     public void reportsLostIfAuctionClosesWhenBidding() {
         context.checking(new Expectations() {{
             ignoring(auction); //ignora o leilão
-            allowing(sniperListener).sniperBidding(); //allowing = apenas suporte ao teste, não é o foco principal (o teste não falha se a chamada não for feita)
+            allowing(sniperListener).sniperBidding(with(any(SniperState.class))); //allowing = apenas suporte ao teste, não é o foco principal (o teste não falha se a chamada não for feita)
                                     then(sniperState.is("bidding")); //registramos o status bidding como o status atual do sniper
             atLeast(1).of(sniperListener).sniperLost();
                                     when(sniperState.is("bidding")); //expectativa principal: sniper está dando lance
