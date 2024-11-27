@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import static com.auctionbidder.SnipersTableModel.textFor;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
@@ -40,7 +41,7 @@ public class SnipersTableModelTest {
         assertColumnEquals(Column.ITEM_IDENTIFIER, "item id");
         assertColumnEquals(Column.LAST_PRICE, 555);
         assertColumnEquals(Column.LAST_BID, 666);
-        assertColumnEquals(Column.SNIPER_STATE, MainWindow.STATUS_BIDDING);
+        assertColumnEquals(Column.SNIPER_STATE, textFor(SniperState.BIDDING));
     }
 
     private void assertColumnEquals(Column column, Object expected) {

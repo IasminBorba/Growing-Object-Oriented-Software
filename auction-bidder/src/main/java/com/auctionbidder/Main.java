@@ -85,9 +85,6 @@ public class Main {
             sendMessage(String.format(BID_COMMAND_FORMAT, amount));
         }
 
-        public void join() {
-            sendMessage(JOIN_COMMAND_FORMAT);
-        }
 
         private void sendMessage(final String message) {
             try {
@@ -104,27 +101,6 @@ public class Main {
                 @Override
                 public void run() {
                     ui.sniperStatusChanged(state);
-                }
-            });
-        }
-
-        public void sniperWinning() {
-            showStatus(MainWindow.STATUS_WINNING);
-        }
-
-        public void sniperWon() {
-            showStatus(MainWindow.STATUS_WON);
-        }
-        
-        public void sniperLost() {
-            showStatus(MainWindow.STATUS_LOST);
-        }
-        
-        private void showStatus(final String status) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    ui.showStatusText(status);
                 }
             });
         }
