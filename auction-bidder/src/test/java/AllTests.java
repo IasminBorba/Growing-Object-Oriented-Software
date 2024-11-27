@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
         AuctionMessageTranslatorTest.class,
         AuctionSniperEndToEndTest.class,
         AuctionSniperTest.class,
+        SnipersTableModelTest.class,
 })
 
 public class AllTests {}

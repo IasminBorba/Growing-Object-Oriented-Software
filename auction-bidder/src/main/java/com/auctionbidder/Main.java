@@ -100,7 +100,12 @@ public class Main {
 
     public class SniperStateDisplayer implements SniperListener {
         public void sniperBidding(SniperState state) {
-            showStatus(MainWindow.STATUS_BIDDING);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    ui.sniperStatusChanged(state, MainWindow.STATUS_BIDDING);
+                }
+            });
         }
 
         public void sniperWinning() {
