@@ -3,7 +3,7 @@ package com.auctionbidder;
 import javax.swing.table.AbstractTableModel;
 
 public class SnipersTableModel extends AbstractTableModel {
-    private static String[] STATUS_TEXT = { MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING};
+    private static String[] STATUS_TEXT = { MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING, MainWindow.STATUS_WINNING};
     private String state = MainWindow.STATUS_JOINING;
 
     private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);

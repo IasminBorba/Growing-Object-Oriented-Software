@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import com.auctionbidder.AuctionEventListener.PriceSource;
 
 import static com.auctionbidder.SniperState.BIDDING;
+import static com.auctionbidder.SniperState.WINNING;
 import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(JMock.class)
@@ -47,9 +48,17 @@ public class AuctionSniperTest {
     @Test
     public void reportsIsWinningWhenCurrentPriceComesFromSniper() {
         context.checking(new Expectations() {{
-            atLeast(1).of(sniperListener).sniperWinning();
+            ignoring(auction);
+            allowing(sniperListener).sniperStateChanged(
+                                    with(aSniperThatIs(BIDDING)));
+                                                then(sniperState.is("bidding"));
+            atLeast(1).of(sniperListener).sniperStateChanged(
+                                    new SniperSnapshot(ITEM_ID, 135, 135, WINNING));
+                                                    when(sniperState.is("bidding"));
         }});
-        sniper.currentPrice(123, 45, PriceSource.FromSniper);
+
+        sniper.currentPrice(123, 12, PriceSource.FromOtherBidder);
+        sniper.currentPrice(135, 45, PriceSource.FromSniper);
     }
 
     @Test
@@ -69,10 +78,10 @@ public class AuctionSniperTest {
     @Test public void reportsWonIfAuctionClosesWhenWinning() {
         context.checking(new Expectations() {{
             ignoring(auction);
-            allowing(sniperListener).sniperWinning();
-                                    then(sniperState.is("winning"));
-            atLeast(1).of(sniperListener).sniperWon();
-                                                when(sniperState.is("winning"));
+            allowing(sniperListener).sniperStateChanged(
+                                    with(aSniperThatIs(WINNING)));
+                                                    then(sniperState.is("winning"));
+            atLeast(1).of(sniperListener).sniperWon();when(sniperState.is("winning"));
         }});
         sniper.currentPrice(123, 45, PriceSource.FromSniper);
         sniper.auctionClosed();
