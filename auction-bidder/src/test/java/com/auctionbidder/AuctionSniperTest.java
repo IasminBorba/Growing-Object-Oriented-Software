@@ -1,5 +1,7 @@
 package com.auctionbidder;
 
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
@@ -7,6 +9,9 @@ import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.auctionbidder.AuctionEventListener.PriceSource;
+
+import static com.auctionbidder.SniperState.BIDDING;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
@@ -32,8 +37,8 @@ public class AuctionSniperTest {
         final int bid = price + increment;
         context.checking(new Expectations() {{
             one(auction).bid(bid); // lance seja enviado uma unica vez com o valor correto
-            atLeast(1).of(sniperListener).sniperBidding(
-                                                new SniperState(ITEM_ID, price, bid)); //se, pelo menos uma vez, o sniper notifica que o listener que está dando lance
+            atLeast(1).of(sniperListener).sniperStateChanged(
+                                                new SniperSnapshot(ITEM_ID, price, bid, BIDDING)); //se, pelo menos uma vez, o sniper notifica que o listener que está dando lance
         }});
 
         sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
@@ -51,10 +56,11 @@ public class AuctionSniperTest {
     public void reportsLostIfAuctionClosesWhenBidding() {
         context.checking(new Expectations() {{
             ignoring(auction); //ignora o leilão
-            allowing(sniperListener).sniperBidding(with(any(SniperState.class))); //allowing = apenas suporte ao teste, não é o foco principal (o teste não falha se a chamada não for feita)
-                                    then(sniperState.is("bidding")); //registramos o status bidding como o status atual do sniper
-            atLeast(1).of(sniperListener).sniperLost();
-                                    when(sniperState.is("bidding")); //expectativa principal: sniper está dando lance
+            allowing(sniperListener).sniperStateChanged(
+                                    with(aSniperThatIs(BIDDING))); //allowing = apenas suporte ao teste, não é o foco principal (o teste não falha se a chamada não for feita)
+                                                    then(sniperState.is("bidding")); //registramos o status bidding como o status atual do sniper
+
+            atLeast(1).of(sniperListener).sniperLost(); when(sniperState.is("bidding")); //expectativa principal: sniper está dando lance
         }});
         sniper.currentPrice(123,45,PriceSource.FromOtherBidder);
         sniper.auctionClosed();
@@ -72,4 +78,13 @@ public class AuctionSniperTest {
         sniper.auctionClosed();
     }
 
+    private Matcher<SniperSnapshot> aSniperThatIs(final SniperState state) {
+        return new FeatureMatcher<SniperSnapshot, SniperState>(
+                equalTo(state), "sniper that is ", "was") {
+            @Override
+            protected SniperState featureValueOf(SniperSnapshot actual) {
+                return actual.state;
+            }
+        };
+    }
 }

@@ -2,12 +2,12 @@ package com.auctionbidder;
 
 import javax.swing.table.AbstractTableModel;
 
-import static com.auctionbidder.MainWindow.STATUS_JOINING;
-
 public class SnipersTableModel extends AbstractTableModel {
-    private final static SniperState STARTING_UP = new SniperState("", 0, 0);
-    private String statusText = STATUS_JOINING;
-    private SniperState sniperState = STARTING_UP;
+    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
+    private final SniperSnapshot sniperState = STARTING_UP;
+    private static String[] STATUS_TEXT = { MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING};
+    private SniperSnapshot snapshot;
+    private String state;
 
     @Override
     public int getColumnCount() {
@@ -29,20 +29,21 @@ public class SnipersTableModel extends AbstractTableModel {
             case LAST_BID:
                 return sniperState.lastBid;
             case SNIPER_STATUS:
-                return statusText;
+                return state;
             default:
                 throw new IllegalArgumentException("No column at " + columnIndex);
         }
     }
 
     public void setStatusText(String newStatusText) {
-        statusText = newStatusText;
+        state = newStatusText;
         fireTableRowsUpdated(0, 0);
     }
 
-    public void sniperStatusChanged(SniperState newSniperState, String newStatusText) {
-        sniperState = newSniperState;
-        statusText = newStatusText;
+    public void sniperStatusChanged(SniperSnapshot newSnapshot) {
+        this.snapshot = newSnapshot;
+        this.state = STATUS_TEXT[newSnapshot.state.ordinal()];
+
         fireTableRowsUpdated(0, 0);
     }
 }
