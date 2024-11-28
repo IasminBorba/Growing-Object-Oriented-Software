@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.hasProperty;
 
 public class FakeAuctionServer {
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
@@ -83,8 +84,7 @@ public class FakeAuctionServer {
         @SuppressWarnings("unchecked")
         public void receivesAMessage(Matcher<? super String> messageMatcher) throws InterruptedException {
             final Message message = messages.poll(5, TimeUnit.SECONDS);
-            assertThat("Message", message, is(notNullValue()));
-            assertThat(message.getBody(), messageMatcher);
+            assertThat(message, hasProperty("body", messageMatcher));
         }
     }
 }

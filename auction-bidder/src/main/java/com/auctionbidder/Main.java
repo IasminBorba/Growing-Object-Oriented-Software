@@ -6,9 +6,10 @@ import org.jivesoftware.smack.XMPPException;
 
 import javax.swing.SwingUtilities;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class Main {
-    @SuppressWarnings("unused") private Chat notToBeGCd;
+    @SuppressWarnings("unused") private ArrayList<Chat> notToBeGCd = new ArrayList<>();
     private MainWindow ui;
     private final SnipersTableModel snipers = new SnipersTableModel();
 
@@ -35,14 +36,17 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Main main = new Main();
-        main.joinAuction(connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]), args[ARG_ITEM_ID]);
+        XMPPConnection connection = connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+        main.disconnectWhenUICloses(connection);
+        for (int i = 3; i < args.length; i++)
+            main.joinAuction(connection, args[i]);
     }
 
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
         disconnectWhenUICloses(connection);
 
         Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection), null);
-        this.notToBeGCd = chat;
+        notToBeGCd.add(chat);
 
         Auction auction = new XMPPAuction(chat);
         chat.addMessageListener(  //Adiciona um MessageListener para processar mensagens recebidas do leilão
