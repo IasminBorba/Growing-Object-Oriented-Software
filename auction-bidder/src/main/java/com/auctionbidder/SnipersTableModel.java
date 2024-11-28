@@ -3,7 +3,7 @@ package com.auctionbidder;
 import javax.swing.plaf.PanelUI;
 import javax.swing.table.AbstractTableModel;
 
-public class SnipersTableModel extends AbstractTableModel {
+public class SnipersTableModel extends AbstractTableModel implements SniperListener{
     private static final String[] STATUS_TEXT = {
             "Joining", "Bidding", "Winning", "Lost", "Won"
     };
@@ -23,21 +23,10 @@ public class SnipersTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        switch (Column.at(columnIndex)) {
-            case ITEM_IDENTIFIER:
-                return snapshot.itemId;
-            case LAST_PRICE:
-                return snapshot.lastPrice;
-            case LAST_BID:
-                return snapshot.lastBid;
-            case SNIPER_STATE:
-                return textFor(snapshot.state);
-            default:
-                throw new IllegalArgumentException("No column at " + columnIndex);
-        }
+        return Column.at(columnIndex).valueIn(snapshot);
     }
 
-    public void sniperStateChanged(SniperSnapshot newSnapshot) {
+    public void sniperStateChanged(final SniperSnapshot newSnapshot) {
         this.snapshot = newSnapshot;
         fireTableRowsUpdated(0, 0);
     }
