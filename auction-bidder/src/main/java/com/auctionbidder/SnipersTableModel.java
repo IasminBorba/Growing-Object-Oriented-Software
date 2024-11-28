@@ -1,6 +1,5 @@
 package com.auctionbidder;
 
-import javax.swing.plaf.PanelUI;
 import javax.swing.table.AbstractTableModel;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener{

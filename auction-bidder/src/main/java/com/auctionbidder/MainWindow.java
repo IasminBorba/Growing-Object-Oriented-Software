@@ -1,6 +1,9 @@
 package com.auctionbidder;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
@@ -31,6 +34,29 @@ public class MainWindow extends JFrame {
     private JTable makeSnipersTable() {
         final JTable snipersTable = new JTable(snipers);
         snipersTable.setName(SNIPERS_TABLE_NAME);
+
+        configuresTableDesign(snipersTable);
+
         return snipersTable;
+    }
+
+    public void configuresTableDesign(JTable snipersTable) {
+        Font cellFont = new Font("Arial", Font.PLAIN, 16);
+        snipersTable.setFont(cellFont);
+        snipersTable.setRowHeight(30);
+
+        JTableHeader header = snipersTable.getTableHeader();
+        Font headerFont = new Font("Arial", Font.BOLD, 18);
+        header.setFont(headerFont);
+
+        DefaultTableCellRenderer centralizeRenderer = new DefaultTableCellRenderer();
+        centralizeRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        for (int i = 0; i < snipersTable.getColumnCount(); i++)
+            snipersTable.getColumnModel().getColumn(i).setCellRenderer(centralizeRenderer);
+
+        JScrollPane scrollPane = new JScrollPane(snipersTable);
+        scrollPane.setBorder(new LineBorder(Color.BLACK, 500));
+        this.add(scrollPane);
     }
 }
