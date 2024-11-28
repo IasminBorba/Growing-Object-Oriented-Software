@@ -4,10 +4,11 @@ import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.*;
 import com.objogate.wl.swing.gesture.GesturePerformer;
 
+import javax.swing.table.JTableHeader;
+
 import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
 import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
 import static java.lang.String.valueOf;
-import static org.hamcrest.CoreMatchers.equalTo;
 
 public class AuctionSniperDriver extends JFrameDriver {
     public AuctionSniperDriver(int timeoutMillis) {
@@ -24,5 +25,14 @@ public class AuctionSniperDriver extends JFrameDriver {
                 withLabelText(valueOf(lastPrice)),
                 withLabelText(valueOf(lastBid)),
                 withLabelText(statusText)));
+    }
+
+    public void hasColumnTitles() {
+        JTableHeaderDriver headers = new JTableHeaderDriver(this, JTableHeader.class);
+        headers.hasHeaders(matching(
+                withLabelText("Item"),
+                withLabelText("Last Price"),
+                withLabelText("Last Bid"),
+                withLabelText("State")));
     }
 }

@@ -13,6 +13,7 @@ public class ApplicationRunner {
 
     public void startBiddingIn(final FakeAuctionServer auction) {
         itemId = auction.getItemId();
+
         Thread thread = new Thread("Test Application") {
             @Override
             public void run() {
@@ -25,7 +26,10 @@ public class ApplicationRunner {
         };
         thread.setDaemon(true);
         thread.start();
+
         driver = new AuctionSniperDriver(1000);
+        driver.hasTitle(MainWindow.APPLICATION_TITLE);
+        driver.hasColumnTitles();
         driver.showsSniperStatus("", 0, 0, textFor(SniperState.JOINING));
     }
 
