@@ -16,7 +16,6 @@ public class Main {
     private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
     private static final int ARG_PASSWORD = 2;
-    private static final int ARG_ITEM_ID = 3;
 
     public static final String AUCTION_RESOURCE = "Auction";
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
@@ -36,8 +35,10 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Main main = new Main();
+
         XMPPConnection connection = connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
         main.disconnectWhenUICloses(connection);
+
         for (int i = 3; i < args.length; i++)
             main.joinAuction(connection, args[i]);
     }
@@ -96,6 +97,10 @@ public class Main {
             sendMessage(String.format(BID_COMMAND_FORMAT, amount));
         }
 
+        @Override
+        public void join() {
+            sendMessage(Main.JOIN_COMMAND_FORMAT);
+        }
 
         private void sendMessage(final String message) {
             try {

@@ -15,7 +15,7 @@ public class AuctionSniperEndToEndTest {
         auction.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID); //aguardando o leilão receber a solicitação de participação do sniper
 
         auction.announceClosed(); //fechamento do leilão
-        application.showsSniperHasLostAuction(); //sniper perdeu o leilão
+        application.hasShownSniperHasLostAuction(auction, 0, 0); //sniper perdeu o leilão
     }
 
     @Test
@@ -31,7 +31,7 @@ public class AuctionSniperEndToEndTest {
         auction.hasReceivedBid(1098, ApplicationRunner.SNIPER_XMPP_ID); //verifica se o leilão recebeu um lance do sniper (igual o ultimo preço + incremento minimo)
 
         auction.announceClosed();
-        application.showsSniperHasLostAuction();
+        application.hasShownSniperHasLostAuction(auction, 1000, 1098);
     }
 
     @Test
@@ -85,6 +85,7 @@ public class AuctionSniperEndToEndTest {
     public void stopAuction() {
         auction.stop();
     }
+
     @AfterEach
     public void stopApplication() {
         application.stop();

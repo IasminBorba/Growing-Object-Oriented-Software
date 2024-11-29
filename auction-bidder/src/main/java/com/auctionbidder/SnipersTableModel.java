@@ -1,16 +1,14 @@
 package com.auctionbidder;
 
-import com.objogate.exception.Defect;
-
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener{
-    private static final String[] STATUS_TEXT = {
+    private static final String[] STATUS_TEXT  = {
             "Joining", "Bidding", "Winning", "Lost", "Won"
     };
 
-    private ArrayList<SniperSnapshot> snapshots = new ArrayList<>();
+    private final ArrayList<SniperSnapshot> snapshots = new ArrayList<>();
 
     @Override
     public int getColumnCount() {
@@ -25,6 +23,11 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         return Column.at(columnIndex).valueIn(snapshots.get(rowIndex));
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return Column.at(column).name;
     }
 
     public void sniperStateChanged(final SniperSnapshot newSnapshot) {
@@ -46,14 +49,9 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
         return STATUS_TEXT[state.ordinal()];
     }
 
-    @Override
-    public String getColumnName(int column) {
-        return Column.at(column).name;
-    }
-
     public void addSniper(SniperSnapshot joining) {
         snapshots.add(joining);
         int row = snapshots.size() - 1;
-        fireTableRowsUpdated(row, row);
+        fireTableRowsInserted(row, row);
     }
 }
