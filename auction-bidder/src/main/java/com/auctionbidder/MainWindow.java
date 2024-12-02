@@ -3,12 +3,15 @@ package com.auctionbidder;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
     public static final String SNIPERS_TABLE_NAME = "Snipers Table";
     public static final String APPLICATION_TITLE = "Auction Sniper";
+    public static final String NEW_ITEM_ID_NAME = "item id";
+    public static final String JOIN_BUTTON_NAME = "Join button";
 
     private final SnipersTableModel snipers;
 
@@ -17,23 +20,22 @@ public class MainWindow extends JFrame {
         this.snipers = snipersTableModel;
 
         setName(MAIN_WINDOW_NAME);
-        fillContentPane(makeSnipersTable());
+        fillContentPane(makeSnipersTable(snipers), makeControls());
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-
-        add(createAuctionPanel(), BorderLayout.NORTH);
     }
 
-    private void fillContentPane(JTable snipersTable) {
+    private void fillContentPane(JTable snipersTable, JPanel controls) {
         final Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
         contentPane.add(new JScrollPane(snipersTable), BorderLayout.CENTER);
+        contentPane.add(new JScrollPane(controls), BorderLayout.NORTH);
     }
 
-    private JTable makeSnipersTable() {
-        final JTable snipersTable = new JTable(snipers);
+    private JTable makeSnipersTable(TableModel snipersTables) {
+        final JTable snipersTable = new JTable(snipersTables);
         snipersTable.setName(SNIPERS_TABLE_NAME);
 
         configuresTableDesign(snipersTable);
@@ -55,24 +57,27 @@ public class MainWindow extends JFrame {
         this.add(scrollPane);
     }
 
-    private Component createAuctionPanel() {
-        JTextField textField = new JTextField(30);
+    private JPanel makeControls() {
+        JPanel controls = new JPanel(new FlowLayout());
+        final JTextField itemIdField = new JTextField();
+        itemIdField.setColumns(25);
+        itemIdField.setName(NEW_ITEM_ID_NAME);
 
-        JPanel panel = new JPanel();
-        panel.add(textField);
-        panel.add(createJoinAuctionButton(textField));
+        controls.add(itemIdField);
+        controls.add(createJoinAuctionButton(itemIdField));
 
-        return panel;
+        return controls;
     }
 
     private JButton createJoinAuctionButton(JTextField textField) {
-        JButton button = new JButton("Join Auction");
+        JButton joinAuctionButton = new JButton("Join Auction");
 
-        button.addActionListener(e -> {
-            String itemId = textField.getText();
-            snipers.addSniper(new SniperSnapshot(itemId, 0, 0,SniperState.JOINING));
+        joinAuctionButton.setName(JOIN_BUTTON_NAME);
+
+        joinAuctionButton.addActionListener(e -> {
+            snipers.addSniper(new SniperSnapshot(textField.getText(), 0, 0,SniperState.JOINING));
         });
 
-        return button;
+        return joinAuctionButton;
     }
 }

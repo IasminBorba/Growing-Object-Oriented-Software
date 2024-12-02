@@ -20,18 +20,21 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JMock.class)
 public class SnipersTableModelTest {
     private final Mockery context = new Mockery();
-    private TableModelListener listener = context.mock(TableModelListener.class);
+    private final TableModelListener listener = context.mock(TableModelListener.class);
     private final SnipersTableModel model = new SnipersTableModel();
 
-    @Before public void attachModelListener() {
+    @Before
+    public void attachModelListener() {
         model.addTableModelListener(listener);
     }
 
-    @Test public void hasEnoughColumns() {
+    @Test
+    public void hasEnoughColumns() {
         assertThat(model.getColumnCount(), equalTo(Column.values().length));
     }
 
-    @Test public void setsSniperValuesInColumns() {
+    @Test
+    public void setsSniperValuesInColumns() {
         SniperSnapshot joining = SniperSnapshot.joining("item id");
         SniperSnapshot bidding = joining.bidding(555, 666);
 
