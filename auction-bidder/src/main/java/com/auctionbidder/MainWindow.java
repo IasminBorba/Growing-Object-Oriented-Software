@@ -5,6 +5,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainWindow extends JFrame {
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
@@ -14,6 +16,7 @@ public class MainWindow extends JFrame {
     public static final String JOIN_BUTTON_NAME = "Join button";
 
     private final SnipersTableModel snipers;
+    private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
 
     public MainWindow(SnipersTableModel snipersTableModel) {
         super(APPLICATION_TITLE);
@@ -74,10 +77,16 @@ public class MainWindow extends JFrame {
 
         joinAuctionButton.setName(JOIN_BUTTON_NAME);
 
-        joinAuctionButton.addActionListener(e -> {
-            snipers.addSniper(new SniperSnapshot(textField.getText(), 0, 0,SniperState.JOINING));
+        joinAuctionButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                userRequests.announce().joinAuction(textField.getText());
+            }
         });
 
         return joinAuctionButton;
+    }
+
+    public void addUserRequestListener(UserRequestListener userRequestListener) {
+        userRequests.addListener(userRequestListener);
     }
 }
