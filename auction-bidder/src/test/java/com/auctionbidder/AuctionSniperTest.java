@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
-    protected static final String ITEM_ID = "item-id";
+    protected static final String ITEM_ID = "item id";
     private final Mockery context = new Mockery();
     private final Auction auction = context.mock(Auction.class);
     private final SniperListener sniperListener = context.mock(SniperListener.class);

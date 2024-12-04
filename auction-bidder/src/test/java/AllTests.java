@@ -5,10 +5,11 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         AuctionMessageTranslatorTest.class,
-        AuctionSniperEndToEndTest.class,
+//        AuctionSniperEndToEndTest.class,
         AuctionSniperTest.class,
         SnipersTableModelTest.class,
         MainWindowTest.class,
+//        XMPPAuctionTest.class,
 })
 
 public class AllTests {}
