@@ -14,7 +14,7 @@ import static java.lang.String.valueOf;
 public class AuctionSniperDriver extends JFrameDriver {
     @SuppressWarnings("unchecked")
     public void startBiddingFor(String itemId) {
-        itemIdField().replaceAllText(itemId);
+        itemIdField().typeText(itemId);
         bidButton().click();
     }
 
@@ -23,6 +23,7 @@ public class AuctionSniperDriver extends JFrameDriver {
         newItemId.focusWithMouse();
         return newItemId;
     }
+
 
     private JButtonDriver bidButton() {
         return new JButtonDriver(this, JButton.class, named(MainWindow.JOIN_BUTTON_NAME));

@@ -23,7 +23,7 @@ public class MainWindowTest {
                 }
         );
 
-        driver.startBiddingFor("aan item id");
+        driver.startBiddingFor("an item id");
         driver.check(buttonProbe);
     }
 }
