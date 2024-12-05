@@ -1,4 +1,7 @@
-import com.auctionbidder.*;
+import com.auctionsniper.*;
+import com.ui.MainWindowTest;
+import com.ui.SnipersTableModelTest;
+import com.xmpp.AuctionMessageTranslatorTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
