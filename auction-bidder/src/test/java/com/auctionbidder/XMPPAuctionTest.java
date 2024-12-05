@@ -17,18 +17,22 @@ public class XMPPAuctionTest {
 //        connection.connect();
 //        connection.login(ApplicationRunner.SNIPER_ID, ApplicationRunner.SNIPER_PASSWORD, Main.AUCTION_RESOURCE);
     }
+
     @AfterEach
     public void closeConnection() {
         connection.disconnect();
     }
+
     @BeforeEach
     public void startAuction() throws XMPPException {
         auctionServer.startSellingItem();
     }
+
     @AfterEach
     public void stopAuction() {
         auctionServer.stop();
     }
+
     @Test
     public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
         CountDownLatch auctionWasClosed = new CountDownLatch(1);
@@ -45,9 +49,12 @@ public class XMPPAuctionTest {
     private AuctionEventListener auctionClosedListener(final CountDownLatch auctionWasClosed) {
         return new AuctionEventListener() {
             @Override
-            public void auctionClosed() { auctionWasClosed.countDown(); }
+            public void auctionClosed() {
+                auctionWasClosed.countDown();
+            }
+
             @Override
-            public void currentPrice(int price, int increment, PriceSource priceSource) { }
+            public void currentPrice(int price, int increment, PriceSource priceSource) {}
         };
     }
 }
