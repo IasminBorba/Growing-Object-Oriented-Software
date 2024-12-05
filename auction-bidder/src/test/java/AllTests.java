@@ -9,7 +9,7 @@ import org.junit.runners.Suite;
         AuctionSniperTest.class,
         SnipersTableModelTest.class,
         MainWindowTest.class,
-//        XMPPAuctionTest.class,
+//        XMPPAuctionHouseTest.class,
 })
 
 public class AllTests {}

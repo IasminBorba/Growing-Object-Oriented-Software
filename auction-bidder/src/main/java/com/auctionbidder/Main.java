@@ -1,14 +1,12 @@
 package com.auctionbidder;
 
-import org.jivesoftware.smack.*;
-
 import javax.swing.SwingUtilities;
 import java.awt.event.*;
 import java.util.ArrayList;
 
 public class Main {
-    @SuppressWarnings("unused") private ArrayList<Auction> notToBeGCd = new ArrayList<>();
     private MainWindow ui;
+    @SuppressWarnings("unused") private ArrayList<Auction> notToBeGCd = new ArrayList<>();
     private final SnipersTableModel snipers = new SnipersTableModel();
 
     private static final int ARG_HOSTNAME = 0;
@@ -34,25 +32,25 @@ public class Main {
     public static void main(String... args) throws Exception {
         Main main = new Main();
 
-        XMPPConnection connection = connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
-        main.disconnectWhenUICloses(connection);
-        main.addUserRequestListenerFor(connection);
+        XMPPAuctionHouse auctionHouse = XMPPAuctionHouse.connect(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+        main.disconnectWhenUICloses(auctionHouse);
+        main.addUserRequestListenerFor(auctionHouse);
     }
 
-    private void disconnectWhenUICloses(final XMPPConnection connection) {
+    private void disconnectWhenUICloses(final XMPPAuctionHouse auctionHouse) {
         ui.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                connection.disconnect();
+                auctionHouse.disconnect();
             }
         });
     }
 
-    private void addUserRequestListenerFor(final XMPPConnection connection) {
+    private void addUserRequestListenerFor(final XMPPAuctionHouse auctionHouse) {
         ui.addUserRequestListener(new UserRequestListener() {
             public void joinAuction(String itemId) {
                 snipers.addSniper(SniperSnapshot.joining(itemId));
-                Auction auction = new XMPPAuction(connection, itemId);
+                Auction auction = auctionHouse.auctionFor(itemId);
                 notToBeGCd.add(auction);
                 auction.addAuctionEventListener(
                                 new AuctionSniper(itemId, auction,
@@ -60,13 +58,6 @@ public class Main {
 //                auction.join(); //Envia comando de entrada
             }
         });
-    }
-
-    private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
-        XMPPConnection connection = new XMPPConnection(hostname);
-//        connection.connect();
-//        connection.login(username, password, AUCTION_RESOURCE);
-        return connection;
     }
 
     public class SwingThreadSniperListener implements SniperListener {

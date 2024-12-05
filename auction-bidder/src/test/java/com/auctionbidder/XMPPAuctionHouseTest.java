@@ -7,20 +7,21 @@ import org.junit.jupiter.api.*;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static junit.framework.TestCase.assertTrue;
 
-public class XMPPAuctionTest {
+public class XMPPAuctionHouseTest {
     private final FakeAuctionServer auctionServer = new FakeAuctionServer("item-54321");
-    private XMPPConnection connection;
+    private XMPPAuctionHouse auctionHouse;
 
     @BeforeEach
     public void openConnection() throws XMPPException {
-        connection = new XMPPConnection(FakeAuctionServer.XMPP_HOSTNAME);
-//        connection.connect();
-//        connection.login(ApplicationRunner.SNIPER_ID, ApplicationRunner.SNIPER_PASSWORD, Main.AUCTION_RESOURCE);
+        auctionHouse = XMPPAuctionHouse.connect(
+                FakeAuctionServer.XMPP_HOSTNAME,
+                ApplicationRunner.SNIPER_ID,
+                ApplicationRunner.SNIPER_PASSWORD);
     }
 
     @AfterEach
     public void closeConnection() {
-        connection.disconnect();
+        auctionHouse.disconnect();
     }
 
     @BeforeEach
@@ -37,7 +38,7 @@ public class XMPPAuctionTest {
     public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
         CountDownLatch auctionWasClosed = new CountDownLatch(1);
 
-        Auction auction = new XMPPAuction(connection, auctionServer.getItemId());
+        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
         auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
 //        auction.join();
 
