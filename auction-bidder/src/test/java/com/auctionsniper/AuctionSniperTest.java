@@ -7,6 +7,7 @@ import org.jmock.Mockery;
 import org.jmock.States;
 import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import com.auctionsniper.AuctionEventListener.PriceSource;
 
@@ -19,8 +20,13 @@ public class AuctionSniperTest {
     private final Mockery context = new Mockery();
     private final Auction auction = context.mock(Auction.class);
     private final SniperListener sniperListener = context.mock(SniperListener.class);
-    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
+    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction);
     private final States sniperState = context.states("sniper");
+
+    @BeforeEach
+    public void attachListener() {
+        sniper.addSniperListener(sniperListener);
+    }
 
     @Test
     public void reportsLostIfAuctionClosesImmediately() {

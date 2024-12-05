@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class Main {
     private MainWindow ui;
-    @SuppressWarnings("unused") private ArrayList<Auction> notToBeGCd = new ArrayList<>();
     private final SnipersTableModel snipers = new SnipersTableModel();
 
     private static final int ARG_HOSTNAME = 0;
@@ -51,16 +50,6 @@ public class Main {
     }
 
     private void addUserRequestListenerFor(final XMPPAuctionHouse auctionHouse) {
-        ui.addUserRequestListener(new UserRequestListener() {
-            public void joinAuction(String itemId) {
-                snipers.addSniper(SniperSnapshot.joining(itemId));
-                Auction auction = auctionHouse.auctionFor(itemId);
-                notToBeGCd.add(auction);
-                auction.addAuctionEventListener(
-                                new AuctionSniper(itemId, auction,
-                                        new SwingThreadSniperListener(snipers))); //Conecta o listener a um AuctionSniper, que monitora o estado do leilão.
-//                auction.join(); //Envia comando de entrada
-            }
-        });
+        ui.addUserRequestListener(new SniperLauncher(auctionHouse, snipers));
     }
 }

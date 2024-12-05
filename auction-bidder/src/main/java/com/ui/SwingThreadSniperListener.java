@@ -1,4 +1,7 @@
-package com.auctionsniper;
+package com.ui;
+
+import com.auctionsniper.SniperListener;
+import com.auctionsniper.SniperSnapshot;
 
 import javax.swing.*;
 

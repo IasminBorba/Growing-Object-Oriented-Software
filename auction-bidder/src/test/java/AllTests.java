@@ -10,8 +10,9 @@ import org.junit.runners.Suite;
         AuctionMessageTranslatorTest.class,
 //        AuctionSniperEndToEndTest.class,
         AuctionSniperTest.class,
-        SnipersTableModelTest.class,
         MainWindowTest.class,
+        SnipersTableModelTest.class,
+        SniperLauncherTest.class,
 //        XMPPAuctionHouseTest.class,
 })
 
