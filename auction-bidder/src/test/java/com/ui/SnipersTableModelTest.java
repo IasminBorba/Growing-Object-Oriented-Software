@@ -37,8 +37,7 @@ public class SnipersTableModelTest {
 
     @Test
     public void setsSniperValuesInColumns() {
-        SniperSnapshot joining = SniperSnapshot.joining("item id");
-        SniperSnapshot bidding = joining.bidding(555, 666);
+        SniperSnapshot bidding = sniper.getSnapshot().bidding(555, 666);
 
         context.checking(new Expectations() {{
             allowing(listener).tableChanged(with(anyInsertionEvent()));
@@ -60,17 +59,17 @@ public class SnipersTableModelTest {
 
     @Test
     public void notifiesListenersWhenAddingASniper() {
-        SniperSnapshot joining = SniperSnapshot.joining("item123");
+        AuctionSniper sniper2 = new AuctionSniper("item123", null);
         context.checking(new Expectations() {{
             one(listener).tableChanged(with(anInsertionAtRow(0)));
         }});
 
         assertEquals(0, model.getRowCount());
 
-        model.addSniper(sniper);
+        model.addSniper(sniper2);
 
         assertEquals(1, model.getRowCount());
-        assertRowMatchesSnapshot(0, sniper.getSnapshot());
+        assertRowMatchesSnapshot(0, sniper2.getSnapshot());
     }
 
     @Test
@@ -110,12 +109,6 @@ public class SnipersTableModelTest {
         model.sniperStateChanged(new SniperSnapshot("item 1", 123, 234, SniperState.WINNING));
     }
 
-    private void assertColumnEquals(Column column, Object expected) {
-        final int rowIndex = 0;
-        final int columnIndex = column.ordinal();
-        assertEquals(expected, model.getValueAt(rowIndex, columnIndex));
-    }
-
     private void assertRowMatchesSnapshot(int row, SniperSnapshot snapshot) {
         assertEquals(snapshot.itemId, cellValue(row, Column.ITEM_IDENTIFIER));
         assertEquals(snapshot.lastPrice, cellValue(row, Column.LAST_PRICE));
@@ -129,10 +122,6 @@ public class SnipersTableModelTest {
 
     Matcher<TableModelEvent> anyInsertionEvent() {
         return hasProperty("type", equalTo(TableModelEvent.INSERT));
-    }
-
-    private Matcher<TableModelEvent> aRowChangedEvent() {
-        return samePropertyValuesAs(new TableModelEvent(model, 0));
     }
 
     private Matcher<TableModelEvent> anInsertionAtRow(final int row) {

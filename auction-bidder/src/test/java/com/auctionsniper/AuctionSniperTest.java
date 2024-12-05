@@ -32,7 +32,7 @@ public class AuctionSniperTest {
     public void reportsLostIfAuctionClosesImmediately() {
         context.checking(new Expectations() {{
             atLeast(1).of(sniperListener).sniperStateChanged(
-                    new SniperSnapshot(ITEM_ID, 0, 0, LOST));
+                    sniper.getSnapshot());
         }});
         sniper.auctionClosed();
     }
