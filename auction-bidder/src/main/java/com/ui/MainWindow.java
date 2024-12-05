@@ -1,5 +1,6 @@
 package com.ui;
 
+import com.auctionsniper.SniperPortfolio;
 import com.auctionsniper.UserRequestListener;
 import com.util.Announcer;
 
@@ -18,15 +19,15 @@ public class MainWindow extends JFrame {
     public static final String NEW_ITEM_ID_NAME = "item id";
     public static final String JOIN_BUTTON_NAME = "Join button";
 
-    private final SnipersTableModel snipers;
+    private final SniperPortfolio portfolio;
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
 
-    public MainWindow(SnipersTableModel snipersTableModel) {
+    public MainWindow(SniperPortfolio portfolio) {
         super(APPLICATION_TITLE);
-        this.snipers = snipersTableModel;
+        this.portfolio = portfolio;
 
         setName(MAIN_WINDOW_NAME);
-        fillContentPane(makeSnipersTable(snipers), makeControls());
+        fillContentPane(makeSnipersTable(portfolio), makeControls());
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -40,8 +41,11 @@ public class MainWindow extends JFrame {
         contentPane.add(new JScrollPane(controls), BorderLayout.NORTH);
     }
 
-    private JTable makeSnipersTable(TableModel snipersTables) {
-        final JTable snipersTable = new JTable(snipersTables);
+    private JTable makeSnipersTable(SniperPortfolio portfolio) {
+        SnipersTableModel model = new SnipersTableModel();
+        portfolio.addPortfolioListener(model);
+
+        final JTable snipersTable = new JTable(model);
         snipersTable.setName(SNIPERS_TABLE_NAME);
 
         configuresTableDesign(snipersTable);

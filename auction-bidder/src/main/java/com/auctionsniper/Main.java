@@ -23,11 +23,13 @@ public class Main {
     public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
 
+    private final SniperPortfolio portfolio = new SniperPortfolio();
+
     public Main() throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                ui = new MainWindow(snipers);
+                ui = new MainWindow(portfolio);
             }
         });
     }
@@ -50,6 +52,6 @@ public class Main {
     }
 
     private void addUserRequestListenerFor(final XMPPAuctionHouse auctionHouse) {
-        ui.addUserRequestListener(new SniperLauncher(auctionHouse, snipers));
+        ui.addUserRequestListener(new SniperLauncher(auctionHouse, portfolio));
     }
 }

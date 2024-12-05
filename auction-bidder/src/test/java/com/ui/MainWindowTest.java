@@ -1,6 +1,7 @@
 package com.ui;
 
 import com.auctionsniper.AuctionSniperDriver;
+import com.auctionsniper.SniperPortfolio;
 import com.auctionsniper.UserRequestListener;
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
 import org.junit.Test;
@@ -8,8 +9,8 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 public class MainWindowTest {
-    private final SnipersTableModel tableModel = new SnipersTableModel();
-    private final MainWindow mainWindow = new MainWindow(tableModel);
+    private final SniperPortfolio portfolio = new SniperPortfolio();
+    private final MainWindow mainWindow = new MainWindow(portfolio);
     private final AuctionSniperDriver driver = new AuctionSniperDriver(100);
 
     @Test

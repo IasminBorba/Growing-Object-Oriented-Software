@@ -5,7 +5,7 @@ import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 
 import static org.hamcrest.Matchers.equalTo;
