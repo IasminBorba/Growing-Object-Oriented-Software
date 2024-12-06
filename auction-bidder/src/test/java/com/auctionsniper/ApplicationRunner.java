@@ -16,9 +16,17 @@ public class ApplicationRunner {
 
         for (FakeAuctionServer auction : auctions) {
             final String itemId = auction.getItemId();
-            driver.startBiddingFor(itemId);
+            driver.startBiddingFor(itemId, Integer.MAX_VALUE);
             driver.showsSniperStatus(itemId, 0, 0, textFor(SniperState.JOINING));
         }
+    }
+
+    public void startBiddingWithStopPrice(final FakeAuctionServer auction, int stopPrice) {
+        startSniper();
+
+        final String itemId = auction.getItemId();
+        driver.startBiddingFor(itemId, stopPrice);
+        driver.showsSniperStatus(itemId, 0, 0, textFor(SniperState.JOINING));
     }
 
     private void startSniper() {

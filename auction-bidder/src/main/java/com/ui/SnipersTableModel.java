@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener, PortfolioListener {
     private static final String[] STATUS_TEXT  = {
-            "Joining", "Bidding", "Winning", "Lost", "Won"
+            "Joining", "Bidding", "Winning", "Losing", "Lost", "Won"
     };
     private final ArrayList<SniperSnapshot> snapshots = new ArrayList<>();
 

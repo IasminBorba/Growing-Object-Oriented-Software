@@ -10,30 +10,33 @@ import javax.swing.table.JTableHeader;
 
 import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
 import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
+import static com.ui.MainWindow.*;
 import static java.lang.String.valueOf;
 
 public class AuctionSniperDriver extends JFrameDriver {
     @SuppressWarnings("unchecked")
-    public void startBiddingFor(String itemId) {
-        itemIdField().typeText(itemId);
+    public void startBiddingFor(String itemId, int stopPrice) {
+        textField(NEW_ITEM_ID_NAME).typeText(itemId);
+        textField(NEW_ITEM_STOP_PRICE_NAME).typeText(String.valueOf(stopPrice));
+
         bidButton().click();
     }
 
-    private JTextFieldDriver itemIdField() {
-        JTextFieldDriver newItemId = new JTextFieldDriver(this, JTextField.class, named(MainWindow.NEW_ITEM_ID_NAME));
-        newItemId.focusWithMouse();
-        return newItemId;
+    private JTextFieldDriver textField(String named) {
+        JTextFieldDriver newTextField = new JTextFieldDriver(this, JTextField.class, named(named));
+        newTextField.focusWithMouse();
+        return newTextField;
     }
 
 
     private JButtonDriver bidButton() {
-        return new JButtonDriver(this, JButton.class, named(MainWindow.JOIN_BUTTON_NAME));
+        return new JButtonDriver(this, JButton.class, named(JOIN_BUTTON_NAME));
     }
 
     public AuctionSniperDriver(int timeoutMillis) {
         super(new GesturePerformer(),
                 JFrameDriver.topLevelFrame(
-                        named(MainWindow.MAIN_WINDOW_NAME),
+                        named(MAIN_WINDOW_NAME),
                         showingOnScreen()),
                 new AWTEventQueueProber(timeoutMillis, 100));
     }
