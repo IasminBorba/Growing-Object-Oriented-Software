@@ -1,10 +1,18 @@
 package com.ui;
 
 import com.auctionsniper.AuctionSniperDriver;
+import com.auctionsniper.Item;
 import com.auctionsniper.SniperPortfolio;
 import com.auctionsniper.UserRequestListener;
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
+import org.junit.After;
 import org.junit.Test;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -15,18 +23,20 @@ public class MainWindowTest {
 
     @Test
     public void makesUserRequestWhenJoinButtonClicked() {
-        final ValueMatcherProbe<String> buttonProbe =
-                new ValueMatcherProbe<>(equalTo("an item id"), "join request");
+        final ValueMatcherProbe<Item> itemProbe = new ValueMatcherProbe<>(equalTo(new Item("an item id", 789)), "item request");
 
         mainWindow.addUserRequestListener(
                 new UserRequestListener() {
-                    public void joinAuction(String itemId) {
-                        buttonProbe.setReceivedValue(itemId);
+                    public void joinAuction(Item item) {
+                        itemProbe.setReceivedValue(item);
                     }
-                }
-        );
+                });
+        driver.startBiddingFor("an item id", 789);
+        driver.check(itemProbe);
+    }
 
-        driver.startBiddingFor("an item id", Integer.MAX_VALUE);
-        driver.check(buttonProbe);
+    @After
+    public void disposeDriver() {
+        driver.dispose();
     }
 }

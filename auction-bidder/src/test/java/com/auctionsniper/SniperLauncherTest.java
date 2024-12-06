@@ -27,7 +27,7 @@ public class SniperLauncherTest {
             oneOf(sniperCollector).addSniper(with(sniperForItem(itemId))); when(auctionState.is("not joined"));
             one(auction).join(); then(auctionState.is("joined"));
         }});
-        launcher.joinAuction(itemId);
+        launcher.joinAuction(new Item(itemId, Integer.MAX_VALUE));
     }
 
     protected Matcher<AuctionSniper> sniperForItem(String itemId) {

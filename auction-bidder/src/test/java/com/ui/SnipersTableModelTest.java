@@ -23,7 +23,7 @@ public class SnipersTableModelTest {
     private static final String ITEM_ID = "item 0";
     private final TableModelListener listener = context.mock(TableModelListener.class);
     private final SnipersTableModel model = new SnipersTableModel();
-    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, null);
+    private final AuctionSniper sniper = new AuctionSniper(new Item(ITEM_ID, 234), null);
 
     @Before
     public void attachModelListener() {
@@ -59,22 +59,21 @@ public class SnipersTableModelTest {
 
     @Test
     public void notifiesListenersWhenAddingASniper() {
-        AuctionSniper sniper2 = new AuctionSniper("item123", null);
         context.checking(new Expectations() {{
             one(listener).tableChanged(with(anInsertionAtRow(0)));
         }});
 
         assertEquals(0, model.getRowCount());
 
-        model.sniperAdded(sniper2);
+        model.sniperAdded(sniper);
 
         assertEquals(1, model.getRowCount());
-        assertRowMatchesSnapshot(0, sniper2.getSnapshot());
+        assertRowMatchesSnapshot(0, SniperSnapshot.joining(ITEM_ID));
     }
 
     @Test
     public void holdsSnipersInAdditionOrder() {
-        AuctionSniper sniper2 = new AuctionSniper("item 1", null);
+        AuctionSniper sniper2 = new AuctionSniper(new Item("item 1", 345), null);
         context.checking(new Expectations() {{
             ignoring(listener);
         }});
@@ -82,14 +81,13 @@ public class SnipersTableModelTest {
         model.sniperAdded(sniper);
         model.sniperAdded(sniper2);
 
-        assertEquals("item 0", cellValue(0, Column.ITEM_IDENTIFIER));
+        assertEquals(ITEM_ID, cellValue(0, Column.ITEM_IDENTIFIER));
         assertEquals("item 1", cellValue(1, Column.ITEM_IDENTIFIER));
     }
 
     @Test
     public void updatesCorrectRowForSniper() {
-        AuctionSniper sniper2 = new AuctionSniper("item 1", null);
-
+        AuctionSniper sniper2 = new AuctionSniper(new Item("item 1", 345), null);
         context.checking(new Expectations() {{
             allowing(listener).tableChanged(with(anyInsertionEvent()));
             one(listener).tableChanged(with(aChangeInRow(1)));

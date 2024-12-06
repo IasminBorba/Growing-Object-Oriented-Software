@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.auctionsniper.SniperState.LOSING;
+
 public class SniperSnapshot {
     public final String itemId;
     public final int lastPrice;
@@ -50,5 +52,9 @@ public class SniperSnapshot {
 
     public boolean isForSameItemAs(SniperSnapshot sniperSnapshot) {
         return itemId.equals(sniperSnapshot.itemId);
+    }
+
+    public SniperSnapshot losing(int newLastPrice) {
+        return new SniperSnapshot(itemId, newLastPrice, lastBid, LOSING);
     }
 }
