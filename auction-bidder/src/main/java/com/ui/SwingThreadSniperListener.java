@@ -1,9 +1,8 @@
 package com.ui;
 
-import com.auctionsniper.SniperListener;
-import com.auctionsniper.SniperSnapshot;
+import com.auctionsniper.*;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 public class SwingThreadSniperListener implements SniperListener {
     private final SniperListener delegate;

@@ -30,7 +30,7 @@ public enum Column {
 
     public final String name;
 
-    Column(String name) {
+    private Column(String name) {
         this.name = name;
     }
 

@@ -1,21 +1,26 @@
 package com.auctionsniper;
 
-import com.ui.SnipersTableModel;
-import com.ui.SwingThreadSniperListener;
+import com.util.Announcer;
 
-public class SniperPortfolio implements PortfolioListener, SniperCollector {
-    SnipersTableModel tableModel;
+import java.util.ArrayList;
+import java.util.EventListener;
 
-    public void sniperAdded(AuctionSniper sniper) {
-
+public class SniperPortfolio implements SniperCollector {
+    public interface PortfolioListener extends EventListener {
+        void sniperAdded(AuctionSniper sniper);
     }
 
-    public void addPortfolioListener(SnipersTableModel tableModel) {
-        this.tableModel = tableModel;
-    }
+    private final Announcer<PortfolioListener> announcer = Announcer.to(PortfolioListener.class);
+    private final ArrayList<AuctionSniper> snipers = new ArrayList<>();
 
     @Override
     public void addSniper(AuctionSniper sniper) {
+        snipers.add(sniper);
+        announcer.announce().sniperAdded(sniper);
+    }
 
+    public void addPortfolioListener(PortfolioListener listener) {
+        announcer.addListener(listener);
     }
 }
+

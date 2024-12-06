@@ -2,26 +2,16 @@ package com.auctionsniper;
 
 import com.xmpp.XMPPAuctionHouse;
 import com.ui.MainWindow;
-import com.ui.SnipersTableModel;
 
 import javax.swing.SwingUtilities;
-import java.awt.event.*;
-import java.util.ArrayList;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Main {
     private MainWindow ui;
-    private final SnipersTableModel snipers = new SnipersTableModel();
-
     private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
     private static final int ARG_PASSWORD = 2;
-
-    public static final String AUCTION_RESOURCE = "Auction";
-    public static final String ITEM_ID_AS_LOGIN = "auction-%s";
-    public static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
-
-    public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
-    public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
 
     private final SniperPortfolio portfolio = new SniperPortfolio();
 
@@ -51,7 +41,7 @@ public class Main {
         });
     }
 
-    private void addUserRequestListenerFor(final XMPPAuctionHouse auctionHouse) {
+    private void addUserRequestListenerFor(final AuctionHouse auctionHouse) {
         ui.addUserRequestListener(new SniperLauncher(auctionHouse, portfolio));
     }
 }

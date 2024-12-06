@@ -1,6 +1,7 @@
 package com.xmpp;
 
 import com.auctionsniper.AuctionEventListener;
+
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
@@ -19,6 +20,7 @@ public class AuctionMessageTranslator implements MessageListener {
         this.listener = listener;
     }
 
+    @Override
     public void processMessage(Chat chat, Message message) {
         AuctionEvent event = AuctionEvent.from(message.getBody());
         String eventType = event.type();
@@ -35,9 +37,17 @@ public class AuctionMessageTranslator implements MessageListener {
     private static class AuctionEvent {
         private final Map<String, String> fields = new HashMap<>();
 
-        public String type() {return get("Event");}
-        public int currentPrice() {return getInt("CurrentPrice");}
-        public int increment() {return getInt("Increment");}
+        public String type() {
+            return get("Event");
+        }
+
+        public int currentPrice() {
+            return getInt("CurrentPrice");
+        }
+
+        public int increment() {
+            return getInt("Increment");
+        }
 
         private int getInt(String fieldName) {
             return Integer.parseInt(get(fieldName));

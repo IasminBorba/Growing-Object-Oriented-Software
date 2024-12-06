@@ -7,27 +7,25 @@ import com.util.Announcer;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainWindow extends JFrame {
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
-    public static final String SNIPERS_TABLE_NAME = "Snipers Table";
+    private static final String SNIPERS_TABLE_NAME = "Snipers Table";
     public static final String APPLICATION_TITLE = "Auction Sniper";
     public static final String NEW_ITEM_ID_NAME = "item id";
-    public static final String JOIN_BUTTON_NAME = "Join button";
+    public static final String JOIN_BUTTON_NAME = "join button";
 
-    private final SniperPortfolio portfolio;
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
 
     public MainWindow(SniperPortfolio portfolio) {
         super(APPLICATION_TITLE);
-        this.portfolio = portfolio;
-
         setName(MAIN_WINDOW_NAME);
+
         fillContentPane(makeSnipersTable(portfolio), makeControls());
+
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -45,7 +43,7 @@ public class MainWindow extends JFrame {
         SnipersTableModel model = new SnipersTableModel();
         portfolio.addPortfolioListener(model);
 
-        final JTable snipersTable = new JTable(model);
+        JTable snipersTable = new JTable(model);
         snipersTable.setName(SNIPERS_TABLE_NAME);
 
         configuresTableDesign(snipersTable);
@@ -81,10 +79,10 @@ public class MainWindow extends JFrame {
 
     private JButton createJoinAuctionButton(JTextField textField) {
         JButton joinAuctionButton = new JButton("Join Auction");
-
         joinAuctionButton.setName(JOIN_BUTTON_NAME);
 
         joinAuctionButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 userRequests.announce().joinAuction(textField.getText());
             }

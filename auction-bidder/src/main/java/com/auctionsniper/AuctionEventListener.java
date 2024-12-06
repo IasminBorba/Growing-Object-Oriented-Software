@@ -8,5 +8,5 @@ public interface AuctionEventListener extends EventListener {
     }
 
     void auctionClosed();
-    void currentPrice(int prince, int increment, PriceSource priceSource);
+    void currentPrice(int price, int increment, PriceSource priceSource);
 }

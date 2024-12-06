@@ -47,6 +47,7 @@ public class Announcer<T extends EventListener> {
         }
         catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
+
             if (cause instanceof RuntimeException) {
                 throw (RuntimeException)cause;
             }
@@ -63,4 +64,3 @@ public class Announcer<T extends EventListener> {
         return new Announcer<T>(listenerType);
     }
 }
-

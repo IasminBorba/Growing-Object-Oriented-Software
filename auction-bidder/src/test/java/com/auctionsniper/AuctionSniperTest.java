@@ -2,17 +2,19 @@ package com.auctionsniper;
 
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
 import org.jmock.integration.junit4.JMock;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.*;
 import org.junit.runner.RunWith;
+
 import com.auctionsniper.AuctionEventListener.PriceSource;
 
 import static com.auctionsniper.SniperState.*;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
@@ -23,7 +25,7 @@ public class AuctionSniperTest {
     private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction);
     private final States sniperState = context.states("sniper");
 
-    @BeforeEach
+    @Before
     public void attachListener() {
         sniper.addSniperListener(sniperListener);
     }
@@ -32,8 +34,9 @@ public class AuctionSniperTest {
     public void reportsLostIfAuctionClosesImmediately() {
         context.checking(new Expectations() {{
             atLeast(1).of(sniperListener).sniperStateChanged(
-                    sniper.getSnapshot());
+                    new SniperSnapshot(ITEM_ID, 0, 0, LOST));
         }});
+
         sniper.auctionClosed();
     }
 
@@ -47,6 +50,7 @@ public class AuctionSniperTest {
             atLeast(1).of(sniperListener).sniperStateChanged(
                     new SniperSnapshot(ITEM_ID, price, bid, BIDDING)); //se, pelo menos uma vez, o sniper notifica que o listener que está dando lance
         }});
+
         sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
     }
 

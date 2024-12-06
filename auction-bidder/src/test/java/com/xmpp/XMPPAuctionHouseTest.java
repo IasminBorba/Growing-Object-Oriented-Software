@@ -7,7 +7,7 @@ import com.auctionsniper.Auction;
 import com.auctionsniper.AuctionEventListener;
 import com.auctionsniper.FakeAuctionServer;
 import org.jivesoftware.smack.*;
-import org.junit.jupiter.api.*;
+import org.junit.*;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static junit.framework.TestCase.assertTrue;
@@ -16,7 +16,7 @@ public class XMPPAuctionHouseTest {
     private final FakeAuctionServer auctionServer = new FakeAuctionServer("item-54321");
     private XMPPAuctionHouse auctionHouse;
 
-    @BeforeEach
+    @Before
     public void openConnection() throws XMPPException {
         auctionHouse = XMPPAuctionHouse.connect(
                 FakeAuctionServer.XMPP_HOSTNAME,
@@ -24,17 +24,17 @@ public class XMPPAuctionHouseTest {
                 ApplicationRunner.SNIPER_PASSWORD);
     }
 
-    @AfterEach
+    @After
     public void closeConnection() {
         auctionHouse.disconnect();
     }
 
-    @BeforeEach
+    @Before
     public void startAuction() throws XMPPException {
         auctionServer.startSellingItem();
     }
 
-    @AfterEach
+    @After
     public void stopAuction() {
         auctionServer.stop();
     }

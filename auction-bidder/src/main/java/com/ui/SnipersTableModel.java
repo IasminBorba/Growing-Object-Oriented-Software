@@ -1,17 +1,16 @@
 package com.ui;
 
 import com.auctionsniper.*;
+import com.auctionsniper.SniperPortfolio.PortfolioListener;
 import com.util.Defect;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
-public class SnipersTableModel extends AbstractTableModel implements SniperListener, SniperCollector {
+public class SnipersTableModel extends AbstractTableModel implements SniperListener, PortfolioListener {
     private static final String[] STATUS_TEXT  = {
             "Joining", "Bidding", "Winning", "Lost", "Won"
     };
-    private final ArrayList<AuctionSniper> notToBeGCd = new ArrayList<>();
-
     private final ArrayList<SniperSnapshot> snapshots = new ArrayList<>();
 
     @Override
@@ -34,6 +33,7 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
         return Column.at(column).name;
     }
 
+    @Override
     public void sniperStateChanged(final SniperSnapshot newSnapshot) {
         int row = rowMatching(newSnapshot);
         snapshots.set(row, newSnapshot);
@@ -54,14 +54,13 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     }
 
     @Override
-    public void addSniper(AuctionSniper sniper) {
-        notToBeGCd.add(sniper);
+    public void sniperAdded(AuctionSniper sniper) {
         addSniperSnapshot(sniper.getSnapshot());
         sniper.addSniperListener(new SwingThreadSniperListener(this));
     }
 
-    public void addSniperSnapshot(SniperSnapshot joining) {
-        snapshots.add(joining);
+    private void addSniperSnapshot(SniperSnapshot sniperSnapshot) {
+        snapshots.add(sniperSnapshot);
         int row = snapshots.size() - 1;
         fireTableRowsInserted(row, row);
     }

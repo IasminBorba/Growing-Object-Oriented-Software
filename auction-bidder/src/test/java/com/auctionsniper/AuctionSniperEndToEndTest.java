@@ -1,6 +1,6 @@
 package com.auctionsniper;
 
-import org.junit.jupiter.api.*;
+import org.junit.*;
 
 public class AuctionSniperEndToEndTest {
     private final FakeAuctionServer auction = new FakeAuctionServer("item 54321");
@@ -81,12 +81,12 @@ public class AuctionSniperEndToEndTest {
         application.showsSniperHasWonAuction(auction2, 521);
     }
 
-    @AfterEach
+    @After
     public void stopAuction() {
         auction.stop();
     }
 
-    @AfterEach
+    @After
     public void stopApplication() {
         application.stop();
     }
