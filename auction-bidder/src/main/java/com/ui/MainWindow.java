@@ -16,6 +16,7 @@ public class MainWindow extends JFrame {
     private static final String SNIPERS_TABLE_NAME = "Snipers Table";
     public static final String APPLICATION_TITLE = "Auction Sniper";
     public static final String NEW_ITEM_ID_NAME = "item id";
+    public static final String NEW_ITEM_STOP_PRICE_NAME = "stop price";
     public static final String JOIN_BUTTON_NAME = "join button";
 
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
@@ -65,13 +66,23 @@ public class MainWindow extends JFrame {
         this.add(scrollPane);
     }
 
-    private JPanel makeControls() {
+    private JPanel makeControls () {
         JPanel controls = new JPanel(new FlowLayout());
-        final JTextField itemIdField = new JTextField();
-        itemIdField.setColumns(25);
+
+        JLabel label = new JLabel(NEW_ITEM_ID_NAME);
+        final JTextField itemIdField = new JTextField(15);
         itemIdField.setName(NEW_ITEM_ID_NAME);
 
+        controls.add(label);
         controls.add(itemIdField);
+
+        JLabel label2 = new JLabel(NEW_ITEM_STOP_PRICE_NAME);
+        final JTextField priceStopField = new JTextField(15);
+        priceStopField.setName(NEW_ITEM_STOP_PRICE_NAME);
+
+        controls.add(label2);
+        controls.add(priceStopField);
+
         controls.add(createJoinAuctionButton(itemIdField));
 
         return controls;
