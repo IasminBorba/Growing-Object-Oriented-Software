@@ -8,10 +8,13 @@ import com.util.Announcer;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.JTableHeader;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainWindow extends JFrame {
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
@@ -22,6 +25,7 @@ public class MainWindow extends JFrame {
     public static final String JOIN_BUTTON_NAME = "join button";
 
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
+    private final Map<String, JComponent> fieldsMap = new HashMap<>();
 
     public MainWindow(SniperPortfolio portfolio) {
         super(APPLICATION_TITLE);
@@ -68,26 +72,28 @@ public class MainWindow extends JFrame {
         this.add(scrollPane);
     }
 
-    private JPanel makeControls () {
+    private JPanel makeControls() {
         JPanel controls = new JPanel(new FlowLayout());
 
-        final JTextField itemIdField = new JTextField(10);
-        itemIdField.setName(NEW_ITEM_ID_NAME);
-        controls.add(new JLabel("Item:"));
-        controls.add(itemIdField);
+        addFieldWithLabel(controls, "Item:", NEW_ITEM_ID_NAME, new JTextField(10));
+        addFieldWithLabel(controls, "Stop price:", NEW_ITEM_STOP_PRICE_NAME, new JFormattedTextField(NumberFormat.getIntegerInstance()));
 
-        final JFormattedTextField stopPriceField = new JFormattedTextField(NumberFormat.getIntegerInstance());
-        stopPriceField.setColumns(7);
-        stopPriceField.setName(NEW_ITEM_STOP_PRICE_NAME);
-        controls.add(new JLabel("Stop price:"));
-        controls.add(stopPriceField);
-
-        controls.add(createJoinAuctionButton(itemIdField, stopPriceField));
+        controls.add(createJoinAuctionButton());
 
         return controls;
     }
 
-    private JButton createJoinAuctionButton(JTextField itemIdField, JFormattedTextField stopPriceField) {
+    private void addFieldWithLabel(JPanel panel, String labelText, String fieldName, JTextComponent field) {
+        field.setName(fieldName);
+        if (field instanceof JFormattedTextField formattedField)
+            formattedField.setColumns(10);
+
+        panel.add(new JLabel(labelText));
+        panel.add(field);
+        fieldsMap.put(fieldName, field);
+    }
+
+    private JButton createJoinAuctionButton() {
         JButton joinAuctionButton = new JButton("Join Auction");
         joinAuctionButton.setName(JOIN_BUTTON_NAME);
 
@@ -97,12 +103,13 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 userRequests.announce().joinAuction(new Item(itemId(), stopPrice()));
+                clearFields();
             }
             private String itemId() {
-                return itemIdField.getText();
+                return ((JTextField) fieldsMap.get(NEW_ITEM_ID_NAME)).getText();
             }
             private int stopPrice() {
-                return ((Number)stopPriceField.getValue()).intValue();
+                return ((Number)((JFormattedTextField) fieldsMap.get(NEW_ITEM_STOP_PRICE_NAME)).getValue()).intValue();
             }
         });
 
@@ -111,5 +118,16 @@ public class MainWindow extends JFrame {
 
     public void addUserRequestListener(UserRequestListener userRequestListener) {
         userRequests.addListener(userRequestListener);
+    }
+
+    void clearFields() {
+        for (String fieldName : fieldsMap.keySet()) {
+            JComponent component = fieldsMap.get(fieldName);
+            if (component instanceof JTextField) {
+                ((JTextField) component).setText("");
+            } else if (component instanceof JFormattedTextField) {
+                ((JFormattedTextField) component).setText("");
+            }
+        }
     }
 }

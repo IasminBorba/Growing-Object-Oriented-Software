@@ -75,6 +75,22 @@ public class ApplicationRunner {
         driver.showsSniperStatus(auction.getItemId(), lastPrice, lastPrice, textFor(SniperState.WON));
     }
 
+    public void hasShownSniperIsLosing(FakeAuctionServer auction, int lastPrice, int lastBid) {
+        driver.showsSniperStatus(auction.getItemId(), lastPrice, lastBid, textFor(SniperState.LOSING));
+    }
+
+    public void showsSniperHasLostAuction(FakeAuctionServer auction, int lastPrice, int lastBid) {
+        driver.showsSniperStatus(auction.getItemId(), lastPrice, lastBid, textFor(SniperState.LOSING));
+    }
+
+    public void showsSniperHasFailed(FakeAuctionServer auction) {
+        driver.showsSniperStatus(auction.getItemId(), 0, 0, textFor(SniperState.FAILED));
+    }
+
+    public void reportsInvalidMessage(FakeAuctionServer auction, String brokenMessage) {
+        //
+    }
+
     public void stop() {
         if (driver != null) {
             driver.dispose();

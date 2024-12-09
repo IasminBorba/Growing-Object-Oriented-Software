@@ -3,7 +3,6 @@ package com.auctionsniper;
 import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.*;
 import com.objogate.wl.swing.gesture.GesturePerformer;
-import com.ui.MainWindow;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
