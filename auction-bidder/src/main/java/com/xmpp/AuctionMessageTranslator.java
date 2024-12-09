@@ -22,7 +22,15 @@ public class AuctionMessageTranslator implements MessageListener {
 
     @Override
     public void processMessage(Chat chat, Message message) {
-        AuctionEvent event = AuctionEvent.from(message.getBody());
+        try {
+            translate(message.getBody());
+        } catch (Exception parseException) {
+            listener.auctionFailed();
+        }
+    }
+
+    public void translate(String message) throws MissingValueException {
+        AuctionEvent event = AuctionEvent.from(message);
         String eventType = event.type();
 
         if ("CLOSE".equals(eventType)) {
@@ -37,31 +45,35 @@ public class AuctionMessageTranslator implements MessageListener {
     private static class AuctionEvent {
         private final Map<String, String> fields = new HashMap<>();
 
-        public String type() {
+        public String type() throws MissingValueException {
             return get("Event");
         }
 
-        public int currentPrice() {
+        public int currentPrice() throws MissingValueException {
             return getInt("CurrentPrice");
         }
 
-        public int increment() {
+        public int increment() throws MissingValueException {
             return getInt("Increment");
         }
 
-        private int getInt(String fieldName) {
+        private int getInt(String fieldName) throws MissingValueException {
             return Integer.parseInt(get(fieldName));
         }
 
-        private String get (String fieldName) {
-            return fields.get(fieldName);
+        private String get(String fieldName) throws MissingValueException {
+            String value = fields.get(fieldName);
+            if (null == value) {
+                throw new MissingValueException(fieldName);
+            }
+            return value;
         }
 
-        public PriceSource isFrom(String sniperId) {
+        public PriceSource isFrom(String sniperId) throws MissingValueException {
             return sniperId.equals(bidder()) ? PriceSource.FromSniper : PriceSource.FromOtherBidder;
         }
 
-        private String bidder() {
+        private String bidder() throws MissingValueException {
             return get("Bidder");
         }
 
@@ -80,6 +92,12 @@ public class AuctionMessageTranslator implements MessageListener {
         private void addField(String field) {
             String[] pair = field.split(":");
             fields.put(pair[0].trim(), pair[1].trim());
+        }
+    }
+
+    private static class MissingValueException extends Exception {
+        public MissingValueException(String fieldName) {
+            super("Missing value for " + fieldName);
         }
     }
 }

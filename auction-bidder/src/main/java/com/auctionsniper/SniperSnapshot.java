@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static com.auctionsniper.SniperState.FAILED;
 import static com.auctionsniper.SniperState.LOSING;
 
 public class SniperSnapshot {
@@ -56,5 +57,9 @@ public class SniperSnapshot {
 
     public SniperSnapshot losing(int newLastPrice) {
         return new SniperSnapshot(itemId, newLastPrice, lastBid, LOSING);
+    }
+
+    public SniperSnapshot failed() {
+        return new SniperSnapshot(itemId, 0, 0, FAILED);
     }
 }
