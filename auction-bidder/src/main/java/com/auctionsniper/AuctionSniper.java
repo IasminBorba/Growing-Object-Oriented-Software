@@ -1,6 +1,7 @@
 package com.auctionsniper;
 
 import com.auctionsniper.util.Announcer;
+import com.auctionsniper.UserRequestListener.Item;
 
 public class AuctionSniper implements AuctionEventListener {
     private final Announcer<SniperListener> listeners = Announcer.to(SniperListener.class);

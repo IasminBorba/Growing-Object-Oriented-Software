@@ -1,6 +1,7 @@
 package com.unit.auctionsniper;
 
 import com.auctionsniper.*;
+import com.auctionsniper.UserRequestListener.Item;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 

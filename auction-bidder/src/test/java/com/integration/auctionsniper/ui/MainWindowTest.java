@@ -1,7 +1,7 @@
 package com.integration.auctionsniper.ui;
 
 import com.endtoend.auctionsniper.AuctionSniperDriver;
-import com.auctionsniper.Item;
+import com.auctionsniper.UserRequestListener.Item;
 import com.auctionsniper.SniperPortfolio;
 import com.auctionsniper.UserRequestListener;
 import com.auctionsniper.ui.MainWindow;

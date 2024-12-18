@@ -3,6 +3,7 @@ package com.unit.auctionsniper.ui;
 import com.auctionsniper.AuctionSniper;
 import com.auctionsniper.SniperSnapshot;
 import com.auctionsniper.SniperState;
+import com.auctionsniper.UserRequestListener.Item;
 import com.auctionsniper.ui.Column;
 import com.auctionsniper.ui.SnipersTableModel;
 import com.auctionsniper.util.Defect;
