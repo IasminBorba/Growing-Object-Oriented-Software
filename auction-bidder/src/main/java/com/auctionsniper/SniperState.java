@@ -1,6 +1,6 @@
 package com.auctionsniper;
 
-import com.util.Defect;
+import com.auctionsniper.util.Defect;
 
 public enum SniperState {
     JOINING {

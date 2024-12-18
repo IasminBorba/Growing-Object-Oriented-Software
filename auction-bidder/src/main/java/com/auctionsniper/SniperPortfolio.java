@@ -1,6 +1,6 @@
 package com.auctionsniper;
 
-import com.util.Announcer;
+import com.auctionsniper.util.Announcer;
 
 import java.util.ArrayList;
 import java.util.EventListener;
