@@ -2,6 +2,7 @@ package com.integration.auctionsniper.xmpp;
 
 import java.util.concurrent.CountDownLatch;
 
+import com.auctionsniper.UserRequestListener.Item;
 import com.endtoend.auctionsniper.ApplicationRunner;
 import com.auctionsniper.Auction;
 import com.auctionsniper.AuctionEventListener;
@@ -45,15 +46,16 @@ public class XMPPAuctionHouseTest {
     public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
         CountDownLatch auctionWasClosed = new CountDownLatch(1);
 
-//        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
-//        auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
-//        auction.join();
+        Auction auction = auctionHouse.auctionFor(new Item(auctionServer.getItemId(), 567));
+        auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
+        auction.join();
 
         auctionServer.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID);
         auctionServer.announceClosed();
 
-        assertTrue("should have been closed", auctionWasClosed.await(2, SECONDS));
+        assertTrue("should have been closed", auctionWasClosed.await(4, SECONDS));
     }
+
     private AuctionEventListener auctionClosedListener(final CountDownLatch auctionWasClosed) {
         return new AuctionEventListener() {
             @Override

@@ -12,17 +12,25 @@ import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
 import static com.auctionsniper.ui.MainWindow.*;
 import static java.lang.String.valueOf;
 
+@SuppressWarnings("unchecked")
 public class AuctionSniperDriver extends JFrameDriver {
-    @SuppressWarnings("unchecked")
-    public void startBiddingFor(String itemId, int stopPrice) {
+    public AuctionSniperDriver(int timeoutMillis) {
+        super(new GesturePerformer(),
+                JFrameDriver.topLevelFrame(
+                        named(MAIN_WINDOW_NAME),
+                        showingOnScreen()),
+                new AWTEventQueueProber(timeoutMillis, 100));
+    }
+
+    public void startBiddingWithStopPrice(String itemId, int stopPrice) {
         textField(NEW_ITEM_ID_NAME).typeText(itemId);
         textField(NEW_ITEM_STOP_PRICE_NAME).typeText(String.valueOf(stopPrice));
 
         bidButton().click();
     }
 
-    private JTextFieldDriver textField(String named) {
-        JTextFieldDriver newTextField = new JTextFieldDriver(this, JTextField.class, named(named));
+    private JTextFieldDriver textField(String fieldName) {
+        JTextFieldDriver newTextField = new JTextFieldDriver(this, JTextField.class, named(fieldName));
         newTextField.focusWithMouse();
         return newTextField;
     }
@@ -30,14 +38,6 @@ public class AuctionSniperDriver extends JFrameDriver {
 
     private JButtonDriver bidButton() {
         return new JButtonDriver(this, JButton.class, named(JOIN_BUTTON_NAME));
-    }
-
-    public AuctionSniperDriver(int timeoutMillis) {
-        super(new GesturePerformer(),
-                JFrameDriver.topLevelFrame(
-                        named(MAIN_WINDOW_NAME),
-                        showingOnScreen()),
-                new AWTEventQueueProber(timeoutMillis, 100));
     }
 
     public void showsSniperStatus(String itemID, int lastPrice, int lastBid, String statusText) {

@@ -9,7 +9,6 @@ import org.jmock.Mockery;
 import org.jmock.States;
 import org.junit.Test;
 
-
 import static org.hamcrest.Matchers.equalTo;
 
 public class SniperLauncherTest {
@@ -22,19 +21,22 @@ public class SniperLauncherTest {
 
     @Test
     public void addsNewSniperToCollectorAndThenJoinsAuction() {
-        final String itemId = "item 123";
         final Item item = new Item("item 123", 456);
+
         context.checking(new Expectations() {{
             allowing(auctionHouse).auctionFor(item); will(returnValue(auction));
-            oneOf(auction).addAuctionEventListener(with(sniperForItem(itemId))); when(auctionState.is("not joined"));
-            oneOf(sniperCollector).addSniper(with(sniperForItem(itemId))); when(auctionState.is("not joined"));
+
+            oneOf(auction).addAuctionEventListener(with(sniperForItem(item))); when(auctionState.is("not joined"));
+            oneOf(sniperCollector).addSniper(with(sniperForItem(item))); when(auctionState.is("not joined"));
+
             one(auction).join(); then(auctionState.is("joined"));
         }});
+
         launcher.joinAuction(item);
     }
 
-    protected Matcher<AuctionSniper> sniperForItem(String itemId) {
-        return new FeatureMatcher<AuctionSniper, String>(equalTo(itemId), "sniper with item id", "item") {
+    protected Matcher<AuctionSniper>sniperForItem(Item item) {
+        return new FeatureMatcher<>(equalTo(item.identifier), "sniper with item id", "item") {
             @Override protected String featureValueOf(AuctionSniper actual) {
                 return actual.getSnapshot().itemId;
             }

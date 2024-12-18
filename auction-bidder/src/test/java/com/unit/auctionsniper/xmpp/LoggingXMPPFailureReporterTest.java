@@ -35,4 +35,3 @@ public class LoggingXMPPFailureReporterTest {
         reporter.cannotTranslateMessage("auction id", "bad message", new Exception("bad"));
     }
 }
-

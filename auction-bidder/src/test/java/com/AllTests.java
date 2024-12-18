@@ -1,5 +1,7 @@
 package com;
 
+import com.endtoend.auctionsniper.AuctionSniperEndToEndTest;
+import com.integration.auctionsniper.xmpp.XMPPAuctionHouseTest;
 import com.unit.auctionsniper.*;
 import com.unit.auctionsniper.xmpp.AuctionMessageTranslatorTest;
 import com.unit.auctionsniper.ui.SnipersTableModelTest;

@@ -48,7 +48,7 @@ public class FakeAuctionServer {
     }
 
     public void reportPrice(int price, int increment, String bidder) throws XMPPException {
-        currentChat.sendMessage(format("SQLVersion: 1.1; Event: PRICE; "
+        currentChat.sendMessage(format("SOLVersion: 1.1; Event: PRICE; "
                         + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
                         price, increment, bidder));
     }
@@ -67,7 +67,7 @@ public class FakeAuctionServer {
     }
 
     public void announceClosed() throws XMPPException {
-        currentChat.sendMessage("SQLVersion: 1.1; Event: CLOSE;");
+        currentChat.sendMessage("SOLVersion: 1.1; Event: CLOSE;");
     }
 
     public void stop() {
@@ -78,7 +78,7 @@ public class FakeAuctionServer {
         currentChat.sendMessage(brokenMessage);
     }
 
-    public static class SingleMessageListener implements MessageListener {
+    public class SingleMessageListener implements MessageListener {
         private final ArrayBlockingQueue<Message> messages =
                 new ArrayBlockingQueue<Message>(1);
 
@@ -86,7 +86,6 @@ public class FakeAuctionServer {
             messages.add(message);
         }
 
-        @SuppressWarnings("unchecked")
         public void receivesAMessage(Matcher<? super String> messageMatcher) throws InterruptedException {
             final Message message = messages.poll(5, TimeUnit.SECONDS);
             assertThat(message, hasProperty("body", messageMatcher));

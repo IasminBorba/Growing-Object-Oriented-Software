@@ -12,8 +12,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 public class MainWindowTest {
-    private final SniperPortfolio portfolio = new SniperPortfolio();
-    private final MainWindow mainWindow = new MainWindow(portfolio);
+    private final MainWindow mainWindow = new MainWindow(new SniperPortfolio());
     private final AuctionSniperDriver driver = new AuctionSniperDriver(100);
 
     @Test
@@ -26,7 +25,8 @@ public class MainWindowTest {
                         itemProbe.setReceivedValue(item);
                     }
                 });
-        driver.startBiddingFor("an item id", 789);
+
+        driver.startBiddingWithStopPrice("an item id", 789);
         driver.check(itemProbe);
     }
 
