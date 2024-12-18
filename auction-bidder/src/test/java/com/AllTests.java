@@ -1,10 +1,9 @@
 package com;
 
+import com.unit.auctionsniper.*;
 import com.unit.auctionsniper.xmpp.AuctionMessageTranslatorTest;
 import com.unit.auctionsniper.ui.SnipersTableModelTest;
 import com.integration.auctionsniper.ui.MainWindowTest;
-import com.unit.auctionsniper.AuctionSniperTest;
-import com.unit.auctionsniper.SniperLauncherTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -14,8 +13,11 @@ import org.junit.runners.Suite;
 //        AuctionSniperEndToEndTest.class,
         AuctionSniperTest.class,
         MainWindowTest.class,
-        SnipersTableModelTest.class,
         SniperLauncherTest.class,
+        SniperPortfolioTest.class,
+        SniperSnapshotTest.class,
+        SnipersTableModelTest.class,
+        SniperStateTests.class,
 //        XMPPAuctionHouseTest.class,
 })
 
