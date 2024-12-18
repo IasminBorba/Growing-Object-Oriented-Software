@@ -23,13 +23,14 @@ public class SniperLauncherTest {
     @Test
     public void addsNewSniperToCollectorAndThenJoinsAuction() {
         final String itemId = "item 123";
+        final Item item = new Item("item 123", 456);
         context.checking(new Expectations() {{
-            allowing(auctionHouse).auctionFor(itemId); will(returnValue(auction));
+            allowing(auctionHouse).auctionFor(item); will(returnValue(auction));
             oneOf(auction).addAuctionEventListener(with(sniperForItem(itemId))); when(auctionState.is("not joined"));
             oneOf(sniperCollector).addSniper(with(sniperForItem(itemId))); when(auctionState.is("not joined"));
             one(auction).join(); then(auctionState.is("joined"));
         }});
-        launcher.joinAuction(new Item(itemId, Integer.MAX_VALUE));
+        launcher.joinAuction(item);
     }
 
     protected Matcher<AuctionSniper> sniperForItem(String itemId) {

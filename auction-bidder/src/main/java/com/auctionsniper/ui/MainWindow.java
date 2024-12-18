@@ -32,8 +32,8 @@ public class MainWindow extends JFrame {
         setName(MAIN_WINDOW_NAME);
 
         fillContentPane(makeSnipersTable(portfolio), makeControls());
-
         pack();
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -42,8 +42,8 @@ public class MainWindow extends JFrame {
         final Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
+        contentPane.add(controls, BorderLayout.NORTH);
         contentPane.add(new JScrollPane(snipersTable), BorderLayout.CENTER);
-        contentPane.add(new JScrollPane(controls), BorderLayout.NORTH);
     }
 
     private JTable makeSnipersTable(SniperPortfolio portfolio) {
@@ -52,7 +52,6 @@ public class MainWindow extends JFrame {
 
         JTable snipersTable = new JTable(model);
         snipersTable.setName(SNIPERS_TABLE_NAME);
-
         configuresTableDesign(snipersTable);
 
         return snipersTable;
@@ -75,22 +74,34 @@ public class MainWindow extends JFrame {
     private JPanel makeControls() {
         JPanel controls = new JPanel(new FlowLayout());
 
-        addFieldWithLabel(controls, "Item:", NEW_ITEM_ID_NAME, new JTextField(10));
-        addFieldWithLabel(controls, "Stop price:", NEW_ITEM_STOP_PRICE_NAME, new JFormattedTextField(NumberFormat.getIntegerInstance()));
+        controls.add(new JLabel("Item:"));
+        controls.add(createTextField());
+
+        controls.add(new JLabel("Stop price:"));
+        controls.add(createFormattedField());
 
         controls.add(createJoinAuctionButton());
 
         return controls;
     }
 
-    private void addFieldWithLabel(JPanel panel, String labelText, String fieldName, JTextComponent field) {
-        field.setName(fieldName);
-        if (field instanceof JFormattedTextField formattedField)
-            formattedField.setColumns(10);
+    private JTextField createTextField() {
+        JTextField textField = new JTextField(10);
+        textField.setName(NEW_ITEM_ID_NAME);
 
-        panel.add(new JLabel(labelText));
-        panel.add(field);
-        fieldsMap.put(fieldName, field);
+        fieldsMap.put(NEW_ITEM_ID_NAME, textField);
+
+        return textField;
+    }
+
+    private JFormattedTextField createFormattedField() {
+        JFormattedTextField formattedField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+        formattedField.setColumns(10);
+        formattedField.setName(NEW_ITEM_STOP_PRICE_NAME);
+
+        fieldsMap.put(NEW_ITEM_STOP_PRICE_NAME, formattedField);
+
+        return formattedField;
     }
 
     private JButton createJoinAuctionButton() {
@@ -116,10 +127,6 @@ public class MainWindow extends JFrame {
         return joinAuctionButton;
     }
 
-    public void addUserRequestListener(UserRequestListener userRequestListener) {
-        userRequests.addListener(userRequestListener);
-    }
-
     void clearFields() {
         for (String fieldName : fieldsMap.keySet()) {
             JComponent component = fieldsMap.get(fieldName);
@@ -129,5 +136,9 @@ public class MainWindow extends JFrame {
                 ((JFormattedTextField) component).setText("");
             }
         }
+    }
+
+    public void addUserRequestListener(UserRequestListener userRequestListener) {
+        userRequests.addListener(userRequestListener);
     }
 }

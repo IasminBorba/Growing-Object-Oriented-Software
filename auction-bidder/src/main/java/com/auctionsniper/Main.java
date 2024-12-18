@@ -16,8 +16,11 @@ public class Main {
     private final SniperPortfolio portfolio = new SniperPortfolio();
 
     public Main() throws Exception {
+        startUserInterface();
+    }
+
+    private void startUserInterface() throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
             public void run() {
                 ui = new MainWindow(portfolio);
             }

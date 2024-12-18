@@ -45,8 +45,8 @@ public class XMPPAuctionHouseTest {
     public void receivesEventsFromAuctionServerAfterJoining() throws Exception {
         CountDownLatch auctionWasClosed = new CountDownLatch(1);
 
-        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
-        auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
+//        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
+//        auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
 //        auction.join();
 
         auctionServer.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID);

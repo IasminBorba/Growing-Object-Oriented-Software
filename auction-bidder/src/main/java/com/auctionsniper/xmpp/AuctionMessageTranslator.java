@@ -1,6 +1,8 @@
 package com.auctionsniper.xmpp;
 
 import com.auctionsniper.AuctionEventListener;
+import static com.auctionsniper.AuctionEventListener.PriceSource.FromOtherBidder;
+import static com.auctionsniper.AuctionEventListener.PriceSource.FromSniper;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
@@ -26,20 +28,20 @@ public class AuctionMessageTranslator implements MessageListener {
     public void processMessage(Chat chat, Message message) {
         String messageBody = message.getBody();
         try {
-            translate(message.getBody());
+            translate(messageBody);
         } catch (Exception parseException) {
             failureReporter.cannotTranslateMessage(sniperId, messageBody, parseException);
             listener.auctionFailed();
         }
     }
 
-    public void translate(String message) throws MissingValueException {
-        AuctionEvent event = AuctionEvent.from(message);
+    private void translate(String messageBody) throws Exception {
+        AuctionEvent event = AuctionEvent.from(messageBody);
         String eventType = event.type();
 
         if ("CLOSE".equals(eventType)) {
             listener.auctionClosed();
-        } else if ("PRICE".equals(eventType)) {
+        } if ("PRICE".equals(eventType)) {
             listener.currentPrice(event.currentPrice(),
                     event.increment(),
                     event.isFrom(sniperId));
@@ -53,28 +55,28 @@ public class AuctionMessageTranslator implements MessageListener {
             return get("Event");
         }
 
-        public int currentPrice() throws MissingValueException {
+        public int currentPrice() throws Exception {
             return getInt("CurrentPrice");
         }
 
-        public int increment() throws MissingValueException {
+        public int increment() throws Exception {
             return getInt("Increment");
         }
 
-        private int getInt(String fieldName) throws MissingValueException {
+        private int getInt(String fieldName) throws Exception {
             return Integer.parseInt(get(fieldName));
         }
 
         private String get(String fieldName) throws MissingValueException {
-            String value = fields.get(fieldName);
-            if (null == value) {
+            final String value = fields.get(fieldName);
+            if (value == null) {
                 throw new MissingValueException(fieldName);
             }
             return value;
         }
 
         public PriceSource isFrom(String sniperId) throws MissingValueException {
-            return sniperId.equals(bidder()) ? PriceSource.FromSniper : PriceSource.FromOtherBidder;
+            return sniperId.equals(bidder()) ? FromSniper : FromOtherBidder;
         }
 
         private String bidder() throws MissingValueException {

@@ -11,18 +11,12 @@ import org.jivesoftware.smack.XMPPException;
 public class XMPPAuction implements Auction {
     private final Announcer<AuctionEventListener> auctionEventListeners = Announcer.to(AuctionEventListener.class);
     private final Chat chat;
-    private final LoggingXMPPFailureReporter failureReporter;
+    private final XMPPFailureReporter failureReporter;
 
     public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
 
-//    public XMPPAuction(XMPPConnection connection, String auctionId) {
-//        chat = connection.getChatManager().createChat(auctionId,
-//                new AuctionMessageTranslator(connection.getUser(),
-//                        auctionEventListeners.announce()));
-//    }
-
-    public XMPPAuction(XMPPConnection connection, String auctionId, LoggingXMPPFailureReporter failureReporter) {
+    public XMPPAuction(XMPPConnection connection, String auctionId, XMPPFailureReporter failureReporter) {
         this.failureReporter = failureReporter;
         AuctionMessageTranslator translator = translatorFor(connection);
         this.chat = connection.getChatManager().createChat(auctionId, translator);
@@ -30,12 +24,11 @@ public class XMPPAuction implements Auction {
     }
 
     private AuctionMessageTranslator translatorFor(XMPPConnection connection) {
-        return new AuctionMessageTranslator(connection.getUser(),
+        return new AuctionMessageTranslator(
+                connection.getUser(),
                 auctionEventListeners.announce(),
-                new XMPPFailureReporter() {
-                    @Override
-                    public void cannotTranslateMessage(String auctionId, String failedMessage, Exception exception) {}
-                });
+                failureReporter
+        );
     }
 
     private AuctionEventListener chatDisconnectorFor(final AuctionMessageTranslator translator) {
