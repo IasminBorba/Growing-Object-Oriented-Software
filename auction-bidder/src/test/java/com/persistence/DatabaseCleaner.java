@@ -1,5 +1,6 @@
 package com.persistence;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.sql.SQLException;
@@ -30,7 +31,15 @@ public class DatabaseCleaner {
 
     private void deleteEntities(Class<?> entityType) {
         entityManager
-                .createQuery("delete from " + entityNameOf(entityType))
+                .createQuery("DELETE FROM " + entityNameOf(entityType))
                 .executeUpdate();
+    }
+
+    private String entityNameOf(Class<?> entityClass) {
+        Entity entityAnnotation = entityClass.getAnnotation(Entity.class);
+        if (entityAnnotation != null && !entityAnnotation.name().isEmpty())
+            return entityAnnotation.name();
+
+        return entityClass.getSimpleName();
     }
 }
