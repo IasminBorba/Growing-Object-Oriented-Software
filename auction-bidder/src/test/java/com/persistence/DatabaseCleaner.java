@@ -1,5 +1,7 @@
 package com.persistence;
 
+import com.auctionsniper.persistence.Customer;
+
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -8,10 +10,10 @@ import java.sql.SQLException;
 public class DatabaseCleaner {
     private static final Class<?>[] ENTITY_TYPES = {
             Customer.class,
-            PaymentMethod.class,
-            AuctionSiteCredentials.class,
-            AuctionSite.class,
-            Address.class
+//            PaymentMethod.class,
+//            AuctionSiteCredentials.class,
+//            AuctionSite.class,
+//            Address.class
     };
     private final EntityManager entityManager;
 

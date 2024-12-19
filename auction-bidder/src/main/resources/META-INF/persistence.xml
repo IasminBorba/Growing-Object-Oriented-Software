@@ -4,10 +4,10 @@
              version="2.1">
     <persistence-unit name="test-persistence-unit" transaction-type="RESOURCE_LOCAL">
         <class>com.auctionsniper.persistence.Customer</class>
-        <class>com.auctionsniper.persistence.PaymentMethod</class>
-        <class>com.auctionsniper.persistence.AuctionSiteCredentials</class>
-        <class>com.auctionsniper.persistence.AuctionSite</class>
-        <class>com.auctionsniper.persistence.Address</class>
+<!--        <class>com.auctionsniper.persistence.PaymentMethod</class>-->
+<!--        <class>com.auctionsniper.persistence.AuctionSiteCredentials</class>-->
+<!--        <class>com.auctionsniper.persistence.AuctionSite</class>-->
+<!--        <class>com.auctionsniper.persistence.Address</class>-->
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
