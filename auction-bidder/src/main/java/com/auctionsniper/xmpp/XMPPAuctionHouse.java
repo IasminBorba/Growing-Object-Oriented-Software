@@ -4,9 +4,12 @@ import com.auctionsniper.Auction;
 import com.auctionsniper.AuctionHouse;
 
 import com.auctionsniper.UserRequestListener.Item;
+import com.auctionsniper.actionsearch.AuctionDescription;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
+import java.util.List;
+import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -48,6 +51,11 @@ public class XMPPAuctionHouse implements AuctionHouse {
 
     public Auction auctionFor(Item item) {
         return new XMPPAuction(connection, auctionId(item.identifier, connection), failureReporter);
+    }
+
+    @Override
+    public List<AuctionDescription> findAuctions(Set<String> keywords) {
+        return List.of();
     }
 
     public void disconnect() {
