@@ -31,8 +31,6 @@ public class AuctionSearchStressTests {
     final ExecutorService executor = Executors.newCachedThreadPool();
     final AuctionSearch search = new AuctionSearch(executor, auctionHouses(), consumer);
 
-    // [...]
-
     private List<AuctionHouse> auctionHouses() {
         ArrayList<AuctionHouse> auctionHouses = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_AUCTION_HOUSES; i++) {
@@ -43,8 +41,7 @@ public class AuctionSearchStressTests {
 
     private AuctionHouse stubbedAuctionHouse(final int id) {
         StubAuctionHouse house = new StubAuctionHouse("house" + id);
-        house.willReturnSearchResults(
-                KEYWORDS, List.of(new AuctionDescription(house, "id" + id, "description")));
+        house.willReturnSearchResults(KEYWORDS, List.of(new AuctionDescription(house, "id" + id, "description")));
         return house;
     }
 
@@ -53,9 +50,9 @@ public class AuctionSearchStressTests {
         context.checking(new Expectations() {{
             ignoring(consumer).auctionSearchFound(with(anyResults()));
         }});
-        for (int i = 0; i < NUMBER_OF_SEARCHES; i++) {
+
+        for (int i = 0; i < NUMBER_OF_SEARCHES; i++)
             completeASearch();
-        }
     }
 
     private void completeASearch() throws InterruptedException {
