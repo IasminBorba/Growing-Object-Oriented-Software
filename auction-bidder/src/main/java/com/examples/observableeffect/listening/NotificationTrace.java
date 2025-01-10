@@ -32,13 +32,6 @@ public class NotificationTrace<T> {
     }
 
     private String failureDescriptionFrom(Matcher<? super T> matcher) {
-        //Unable to find a notification that matches the criteria received.
-        //Notifications received = {
-        //  [...]
-        // }
-        //
-        // Criteria received = matcher
-
         StringBuilder failureDescription = new StringBuilder(
                 """
                         Unable to find a notification that matches the criteria received.

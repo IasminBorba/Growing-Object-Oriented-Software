@@ -23,6 +23,20 @@ public class NotificationTraceTest {
         notificationTrace.containsNotification(holdingOfStock("A", tradeDate, equalTo(0)));
     }
 
+    @Test
+    public void testNotificationTraceContainsNotificationStartingWithWANTED() throws InterruptedException {
+        NotificationTrace<String> trace = new NotificationTrace<>();
+
+        sendNotification(trace, "WANTED: Action required");
+        sendNotification(trace, "NOT_WANTED: No action required");
+
+        trace.containsNotification(startsWith("WANTED"));
+    }
+
+    private void sendNotification(NotificationTrace<String> trace, String notification) {
+        trace.append(notification);
+    }
+
     private void send(TradeEvent event, NotificationTrace<TradeEvent> notificationTrace) {
         notificationTrace.append(event);
     }
