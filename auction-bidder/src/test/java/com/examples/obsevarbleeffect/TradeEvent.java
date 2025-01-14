@@ -1,6 +1,7 @@
 package com.examples.obsevarbleeffect;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class TradeEvent {
     public enum TradeType {
@@ -32,6 +33,12 @@ public class TradeEvent {
         return this;
     }
 
+    public TradeEvent inTradingRegion(String region) {
+        if (Objects.equals(region, "Other region"))
+            quantity = 0;
+        return this;
+    }
+
     public TradeType getType() {
         return type;
     }
@@ -42,6 +49,10 @@ public class TradeEvent {
 
     public String getStock() {
         return stock;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     @Override

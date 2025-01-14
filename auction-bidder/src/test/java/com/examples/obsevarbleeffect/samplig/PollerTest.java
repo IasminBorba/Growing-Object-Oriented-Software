@@ -12,9 +12,14 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PollerTest {
     static final long NOT_SET = -1;
+    static final String OTHER_REGION = "Other region";
+    static final String SAME_REGION = "Same region";
+    private static final Map<String, Integer> stockHoldings = new HashMap<>();
 
     @Test
     public void testFileLength() throws InterruptedException, IOException {
@@ -33,11 +38,19 @@ public class PollerTest {
     public void buyAndSellOfSameStockOnSameDayCancelsOutOurHolding() throws InterruptedException {
         Date tradeDate = new Date();
         send(aTradeEvent().ofType(BUY).onDate(tradeDate).forStock("A").withQuantity(10));
+        assertEventually(holdingOfStock("A", tradeDate, equalTo(10)));
+
+
         send(aTradeEvent().ofType(SELL).onDate(tradeDate).forStock("A").withQuantity(10));
-
-        Thread.sleep(200);
-
         assertEventually(holdingOfStock("A", tradeDate, equalTo(0)));
+    }
+
+    @Test
+    public void doesNotShowTradesInOtherRegions() throws InterruptedException {
+        Date tradeDate = new Date();
+        send(aTradeEvent().ofType(BUY).forStock("A").withQuantity(10).inTradingRegion(OTHER_REGION));
+        send(aTradeEvent().ofType(BUY).forStock("A").withQuantity(66).inTradingRegion(SAME_REGION));
+        assertEventually(holdingOfStock("A", tradeDate, equalTo(66)));
     }
 
     public static void assertEventually(Probe probe) throws InterruptedException {
@@ -65,9 +78,7 @@ public class PollerTest {
 
             @Override
             public void sample() {
-                if (stock.equals("A") && tradeDate != null) {
-                    currentHolding = 0;
-                }
+                currentHolding = stockHoldings.getOrDefault(stock, 0);
             }
 
             @Override
@@ -82,7 +93,19 @@ public class PollerTest {
         };
     }
 
-    private void send(TradeEvent event) {}
+    private void send(TradeEvent event) {
+        String stock = event.getStock();
+        int quantity = event.getQuantity();
+
+        switch (event.getType()) {
+            case BUY:
+                stockHoldings.put(stock, stockHoldings.getOrDefault(stock, 0) + quantity);
+                break;
+            case SELL:
+                stockHoldings.put(stock, stockHoldings.getOrDefault(stock, 0) - quantity);
+                break;
+        }
+    }
 
     private TradeEvent aTradeEvent() {
         return new TradeEvent();
